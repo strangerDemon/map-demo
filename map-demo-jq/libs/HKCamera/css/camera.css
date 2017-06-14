@@ -1,0 +1,105 @@
+@charset "utf-8";
+* 
+{
+	margin:0;
+	padding:0;
+}
+html
+{
+	width:100%;
+	height:100%;
+	/*font-size:12px;*/
+	font-family:Arial, Helvetica, sans-serif;
+	-webkit-text-size-adjust:none;
+	background:#FFFFFF;
+}
+body
+{
+	/*padding:5px;*/
+}
+select
+{
+	height:20px;
+	line-height:20px;
+}
+span{
+	font-size: 16px;
+	font-family: "Microsoft YaHei", sans-serif;
+	margin: 0 0.5em;
+}
+button{
+	margin:0.2em!important;
+}
+.cameraDiv{
+	float: left;
+}
+.activtetrue {
+	border: 2px solid #ff5d5b;
+	padding: 0 0px;
+	background: url(../../../images/duihao.png) right top no-repeat;
+	margin: 2px 0 0 5px;
+	box-sizing: border-box;
+}
+.activtefalse {
+	margin: 2px 0 0 5px;
+}
+.buttonDiv{
+	line-height: 0.5em;
+}
+.left
+{
+	float:left;
+}
+.freeze
+{
+	position:absolute;
+	text-align:center;
+	background:#343434;
+	color:#FFFFFF;
+	font-size:26px;
+	font-weight:bold;
+	filter:alpha(opacity=60);
+	opacity:0.6;
+}
+.vtop
+{
+	vertical-align:middle;
+	margin-top:-1px;
+}
+/*插件*/
+.plugin
+{
+	width:580px;
+	height:410px;
+}
+/*云台*/
+.ptz
+{
+	/*padding:10px;*/
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.ptz .tt
+{
+	width:60px;
+}
+.ptz .txt
+{
+	width:60px;
+}
+.ptz .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.ptz .btn2
+{
+    width:60px;
+    height:22px;
+    line-height:18px;
+}
+.ptz .sel
+{
+	width:65px;
+}

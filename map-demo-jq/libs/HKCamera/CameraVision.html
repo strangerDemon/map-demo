@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>监控</title>
+    <!--vue-->
+    <script src="../vue.js"></script>
+
+    <script src="./ckplayer/ckplayer.js"></script>
+
+    <script src="../jquery-3.2.1.min.js"></script>
+    <link rel='stylesheet' href='css/camera.css'>
+    <!-- bootstrap button-->
+    <link rel='stylesheet' href='../map/lib/button/css/buttons.css'>
+    <script src="../map/lib/button/buttons.js"></script>
+    <link rel='stylesheet' href='../map/lib/button/css/font-awesome.css'>
+</head>
+<body cz-shortcut-listen="true" style="margin:0px;">
+<div id="myPlayer">
+    <div id="players" style="position:absolute;">
+    </div>
+    <div v-show="isShow" style="position:absolute;right:0.5em">
+
+        <h2>云台控制</h2>
+
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(4);" v-on:mouseup="mouseUpControl" title="左上">
+            <i class="fa fa-arrow-left" style="transform:rotate(45deg);"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(0);" v-on:mouseup="mouseUpControl" title="上"><i
+                class="fa fa-arrow-up"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(6);" v-on:mouseup="mouseUpControl" title="右上">
+            <i class="fa fa-arrow-right" style="transform:rotate(-45deg);"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(2);" v-on:mouseup="mouseUpControl" title="左"><i
+                class="fa fa-arrow-left"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                onclick="mouseDownControl(9);" title="自动"><i class="fa fa-arrows"></i></button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(3);" v-on:mouseup="mouseUpControl" title="右"><i
+                class="fa fa-arrow-right"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(5);" v-on:mouseup="mouseUpControl" title="左下">
+            <i class="fa fa-arrow-left" style="transform:rotate(-45deg);"></i>
+        </button>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(1);"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-arrow-down" title="下"></i></button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(7);" v-on:mouseup="mouseUpControl" title="右下">
+            <i class="fa fa-arrow-right" style="transform:rotate(45deg);"></i>
+        </button>
+        <div class="buttonDiv"></div>
+
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(9)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-minus"></i>
+        </button>
+        <span>变倍</span>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(8)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-plus"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(11)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-minus"></i>
+        </button>
+        <span>变焦</span>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(10)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-plus"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <!--<button class="button button-primary button-circle " v-on:mousedown="IrisOut()"
+                v-on:mouseup="IrisStop()"><i class="fa fa-minus"></i>
+        </button>
+        <span>光圈</span>
+        <button class="button button-primary button-circle " v-on:mousedown="IrisIn()"
+                v-on:mouseup="IrisStop()"><i class="fa fa-plus"></i>
+        </button>-->
+        <span>分屏：</span>
+        <span class="button-dropdown" data-buttons="dropdown">
+            <button class="button button-rounded" style="padding:0 10px;">
+            {{ splitScreenTitle }}<i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="button-dropdown-list">
+                <li v-for="option in splitScreenOptions">
+                    <a v-on:click="splitScreen(option.value,option.text)"
+                       style="line-height: 25px">{{ option.text }}</a>
+                </li>
+            </ul>
+        </span>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-rounded button-normal " v-on:mousedown="printScreen()">截图
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+    new Vue({
+        el: "#myPlayer",
+        data: {
+            title: "",
+            url: "",
+            /*分屏显示的设置参数*/
+            isShow: true, /*false 是否显示云控制台*/
+            splitScreenNum: 1, /*分屏数*/
+            splitScreenTitle: "1x1", /*分屏title*/
+            splitScreenOptions: [
+                {text: '1x1', value: '1'},
+                {text: '2x2', value: '2'},
+                {text: '3x3', value: '3'}
+            ],
+            height: 426, /*每个屏的高*/
+            width: 636, /*796 每个屏的宽*/
+
+            player: null,
+            /*api token*/
+            token: "dGltZT0xNDc5Mzg1NjgyMzY0Jm51bT1TUTZJMyZhY2Nlc3NUb2tlbj10cFJBQ0dqOTdPSk1nZG5MUlllTVQzSVRoL090RDB6SSZ2ZXJzaW" +
+            "9uPXYxLjAmYXBwSWQ9aW5pdCZwbGF0Zm9ybT1hbmRyb2lkJnBob25lVVVJRD01YjJkMjk1MzNkNmY0MzM2OGExNzJhNmRhMjk3ZGE1ZA==",
+            /*设备数据*/
+            deviceSerial: "",
+            channelNo: 1,
+            accessToken: ""
+        },
+        methods: {
+            init(cameraData){
+                this.getAccessToken();
+                this.title = cameraData.Name;
+                this.deviceSerial = cameraData.DeviceSerial;
+                this.channelNo = cameraData.ChannelNo;
+                var isController = cameraData.IsController;
+                if (isController == 1 || isController == "1") {
+                    this.isShow = true;
+                    this.width = 630;
+                } else {
+                    this.isShow = false;
+                }
+                this.url = "s=4&f=https://open.ys7.com/sdk/js/1.0/ckplayer/m3u8.swf&a=" + cameraData.Url + "&c=0&amp;lv=1&p=1&i=https://open.ys7.com/sdk/js/1.0/demo.html&loaded=loadHandler";
+                if (this.url == null || this.url == "") {
+                } else {
+                    new EZUIPlayer('myPlayer');
+                }
+            },
+            //url截取获得参数
+            getString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            },
+
+            closePlayer(){
+                this.player = null;
+            },
+
+
+            //http请求
+            //参数内不能有'&',会造成请求参数中断，
+            httpRequest(url, sendData){
+                return $.ajax({
+                    type: "GET", //访问WebService使用Post方式请求
+                    url: "http://www.ztgis.com:8883/xmtdt.asmx/getYsApiData?para={'Token':'" + this.token + "','url':'" + url + "','sendData':'" + sendData + "'}", //调用WebService
+                    dataType: 'json',
+                });
+            },
+            //对设备进行开始云台控制，开始云台控制之后必须先调用停止云台控制接口才能进行其他操作，包括其他方向的云台转动
+            //token
+            getAccessToken(){
+                let vm = this;//因为是指针，所以修改vm也是在修改this
+                this.httpRequest("https://open.ys7.com/api/lapp/token/get", "").then(function (json) {
+                    var data = JSON.parse(json.Results);
+                    console.log("获取token：", data.data.accessToken);
+                    vm.accessToken = data.data.accessToken;
+                });
+
+            },
+            //移动方向
+            //url：https://open.ys7.com/api/lapp/device/ptz/start
+            //data:accessToken=at.4g01l53x0w22xbp30ov33q44app1ns9m&deviceSerial=502608888&channelNo=1&direction=2&speed=1
+            mouseDownControl(direction){
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + this.deviceSerial + "%26channelNo=" + this.channelNo + "%26direction=" + direction + "%26speed=" + 1;
+                this.httpRequest("https://open.ys7.com/api/lapp/device/ptz/start", sendData).then(function (json) {
+                    var data = JSON.parse(json.Results);
+                    console.log("云台方向控制：", data.code + data.msg);
+                    if (data.code != 200) {
+                        alert(data.msg);
+                    }
+                });
+            },
+            //停止控制
+            //URl:https://open.ys7.com/api/lapp/device/ptz/stop
+            //data:accessToken=at.25ne3gkr6fa7coh34ys0fl1h9hryc2kr&deviceSerial=568261888&channelNo=1
+            mouseUpControl(){
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + this.deviceSerial + "%26channelNo=" + this.channelNo;
+                this.httpRequest("URl:https://open.ys7.com/api/lapp/device/ptz/stop", sendData).then(function (json) {
+                    var data = JSON.parse(json.Results);
+                    console.log("停止云台控制：", data.code + data.msg);
+                    if (data.code != 200) {
+                        alert(data.msg);
+                    }
+                });
+            },
+            //光圈 官网上没有看到相应的api
+            IrisOut(){
+                alert("暂不支持");
+            },
+            IrisIn(){
+                alert("暂不支持");
+            },
+            IrisStop(){
+                alert("暂不支持");
+            },
+            //截图
+            //url:https://open.ys7.com/api/lapp/device/capture
+            //data:accessToken=at.12xp95k63bboast3aq0g5hg22q468929&deviceSerial=427734888&channelNo=1
+            printScreen(){
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + this.deviceSerial + "%26channelNo=" + this.channelNo;
+                this.httpRequest("https://open.ys7.com/api/lapp/device/capture", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("截图结果：", data.msg);
+                    window.open(data.data.picUrl);//为截屏结果打开新窗口
+                })
+            },
+            //回放
+            //url:https://open.ys7.com/api/lapp/live/address/limited
+            //data:accessToken=at.20h863523v1zfck75qgmwhoy7vl2teqp&deviceSerial=427734888&channelNo=1&expireTime=300
+            //expireTime:秒
+            playback(expireTime){
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + this.deviceSerial + "%26channelNo=" + this.channelNo + "%26expireTime=" + expireTime;
+                this.httpRequest("https://open.ys7.com/api/lapp/live/address/limited", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("回放结果:", data.msg);
+                });
+            },
+            //分屏显示 操作
+            //1*1
+            //2*2
+            //3*3
+            splitScreen(num, title){
+                this.splitScreenNum = num;
+                this.splitScreenTitle = title;
+                if (this.splitScreenNum == 3) {
+                    this.width = 212;
+                    this.height = 142;
+                }
+                else if (this.splitScreenNum == 2) {
+                    this.width = 318;
+                    this.height = 213;
+                }
+                else {
+                    this.width = 636;
+                    this.height = 426;
+                }
+            },
+            //点击某一个分屏
+            //放大 说笑屏幕显示
+            clickScreen(screenId){
+                alert(screenId);
+            }
+        },
+        watch: {
+            accessToken(){
+                console.log("accessToken:" + this.accessToken);
+            }
+        },
+        mounted: function () {
+            var flashvars;
+            flashvars = {
+                f: 'ckplayer/m3u8.swf',
+                a: 'http://hls.open.ys7.com/openlive/168a52a8dfef4120855fd13e69d14f1d.m3u8', //此处填写购买获取到的视频播放地址
+                c: 0,
+                p: 1,
+                s: 4,
+                lv: 1
+            };
+            var params = {bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent'};
+            CKobject.embedSWF("ckplayer/ckplayer.swf", "players", "video", "100%", "100%", flashvars, params);
+        },
+        destroyed: function () {
+            this.player = null;
+            console.log("player is close;");
+            alert("player is close;");
+        }
+    });
+</script>
+
+</body>
+</html>

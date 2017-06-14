@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>监控</title>
+    <!--vue-->
+    <script src="vue.js"></script>
+
+    <script src="libs/HKCamera/ckplayer/ckplayer.js"></script>
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <link rel='stylesheet' href='libs/HKCamera/css/camera.css'>
+    <!-- bootstrap button-->
+    <link rel='stylesheet' href='libs/button/css/buttons.css'>
+    <script src="libs/button/buttons.js"></script>
+    <link rel='stylesheet' href='libs/button/css/font-awesome.css'>
+    <!--ckplayer 内按钮-->
+    <link rel="stylesheet" href="libs/viewer/viewer.css">
+    <script src="libs/viewer/viewer.js"></script>
+</head>
+<body style="margin:0px;">
+<div id="myPlayer">
+    <div id="players" style="position:absolute;max-width: 636px;max-height: 436px;">
+        <v-embed v-for="camera in cameraList" :detail="camera" key="item"></v-embed>
+        <!--<object pluginspage="http://www.macromedia.com/go/getflashplayer"
+                classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+                codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,3,0,0"
+                name="myPlayerflashId">
+            <embed allowscriptaccess="always"
+                   allowfullscreen="true"
+                   quality="high"
+                   bgcolor="#FFF"
+                   wmode="transparent"
+                   src="https://open.ys7.com/sdk/js/1.0/ckplayer/ckplayer.swf"
+                   :flashvars="url"
+                   id="myPlayerflashId"
+                   name="myPlayerflashId"
+                   type="application/x-shockwave-flash"
+                   :height="height+'px'"
+                   :width="width+'px'"
+                   align="middle"
+                   pluginspage="http://www.macromedia.com/go/getflashplayer">
+        </object>-->
+    </div>
+    <div v-show="isShow" style="position:absolute;right:0.5em">
+
+        <h2>云台控制</h2>
+
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(4);" v-on:mouseup="mouseUpControl" title="左上">
+            <i class="fa fa-arrow-left" style="transform:rotate(45deg);"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(0);" v-on:mouseup="mouseUpControl" title="上"><i
+                class="fa fa-arrow-up"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(6);" v-on:mouseup="mouseUpControl" title="右上">
+            <i class="fa fa-arrow-right" style="transform:rotate(-45deg);"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(2);" v-on:mouseup="mouseUpControl" title="左"><i
+                class="fa fa-arrow-left"></i>
+        </button>
+        <button class="button button-primary button-circle "
+                onclick="mouseDownControl(9);" title="自动"><i class="fa fa-arrows"></i></button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(3);" v-on:mouseup="mouseUpControl" title="右"><i
+                class="fa fa-arrow-right"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(5);" v-on:mouseup="mouseUpControl" title="左下">
+            <i class="fa fa-arrow-left" style="transform:rotate(-45deg);"></i>
+        </button>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(1);"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-arrow-down" title="下"></i></button>
+        <button class="button button-primary button-circle "
+                v-on:mousedown="mouseDownControl(7);" v-on:mouseup="mouseUpControl" title="右下">
+            <i class="fa fa-arrow-right" style="transform:rotate(45deg);"></i>
+        </button>
+        <div class="buttonDiv"></div>
+
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(9)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-minus"></i>
+        </button>
+        <span>变倍</span>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(8)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-plus"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(11)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-minus"></i>
+        </button>
+        <span>变焦</span>
+        <button class="button button-primary button-circle " v-on:mousedown="mouseDownControl(10)"
+                v-on:mouseup="mouseUpControl"><i class="fa fa-plus"></i>
+        </button>
+        <div class="buttonDiv"></div>
+        <span>分屏：</span>
+        <span class="button-dropdown" data-buttons="dropdown">
+            <button class="button button-rounded" style="padding:0 10px;">
+            {{ splitScreenTitle }}<i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="button-dropdown-list">
+                <li v-for="option in splitScreenOptions">
+                    <a v-on:click="splitScreen(option.value,option.text)"
+                       style="line-height: 25px">{{ option.text }}</a>
+                </li>
+            </ul>
+        </span>
+        <div class="buttonDiv"></div>
+        <button class="button button-primary button-rounded button-normal " v-on:mousedown="printScreen()">截图
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+    const MaxWidth = 630,
+        MaxHeight = 420,
+        MiddleWidth = 300,
+        MiddleHeight = 210,
+        MinWidth = 200,
+        MinHeight = 130;
+    window.cameraList = [];//摄像头列表
+    window.splitScreenNum = 1;//分屏数
+    window.isFullScreen=false;//是否是全屏状态，解决 扩大/关闭 扩大/新增 bug
+    function setCameraList(camera) {
+        var info = camera.split("|");//单个的数据
+        for (var i = 0; i < cameraList.length; i++) {
+            cameraList[i].Checked = false;//将所有的改成未选中状态
+            if (cameraList[i].Id == info[0]) {//以前就存在,替换
+                cameraList.splice(i, 1);
+            }
+        }
+        if (cameraList.length < window.splitScreenNum * window.splitScreenNum) {//数量少于分屏数
+
+        } else {
+            cameraList.splice(0, 1);//去掉最早加入的
+        }
+        let width = MaxWidth;
+        let height = MaxHeight;
+        if (window.splitScreenNum == 3) {
+            width = MinWidth;
+            height = MinHeight;
+        }
+        else if (window.splitScreenNum == 2) {
+            width = MiddleWidth;
+            height = MiddleHeight;
+        }
+        else {
+            width = MaxWidth;
+            height = MaxHeight;
+        }
+        let d = {
+            "Id": info[0],
+            "Name": info[1],
+            "Url": info[2],
+            "IsController": info[3],
+            "DeviceSerial": info[4],
+            "ChannelNo": info[5],
+            "Width": width,
+            "Height": height,
+            "Checked": true,
+            "Show":!window.isFullScreen,
+        };
+        cameraList.push(d);
+    }
+    Vue.component('v-embed', {
+            props: ['detail'],
+            template: '<div class="cameraDiv" v-show="detail.Show"><object pluginspage="http://www.macromedia.com/go/getflashplayer"\
+                        classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"\
+                        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,3,0,0"\
+                        :name="detail.Id"\
+                        :height="detail.Height+\'px\'"\
+                        :width="detail.Width+\'px\'"\
+                        align="middle">\
+                            <embed allowscriptaccess="always"\
+                                allowfullscreen="true"\
+                                quality="high"\
+                                bgcolor="#FFF"\
+                                wmode="transparent"\
+                                src="https://open.ys7.com/sdk/js/1.0/ckplayer/ckplayer.swf"\
+                                :flashvars="\'s=4&f=https://open.ys7.com/sdk/js/1.0/ckplayer/m3u8.swf&a=\'+detail.Url+\'&c=0&amp;lv=1&p=1&i=https://open.ys7.com/sdk/js/1.0/demo.html&loaded=loadHandler\'"\
+                                :id="detail.Id"\
+                                :name="detail.Id"\
+                                type="application/x-shockwave-flash"\
+                                :height="detail.Height+\'px\'"\
+                                :width="detail.Width+\'px\'"\
+                                :class="\'activte\'+detail.Checked"\
+                                style="margin: 2px 0 0 5px;"\
+                                align="middle"\
+                                pluginspage="http://www.macromedia.com/go/getflashplayer">\
+                                     <ul :class="\'viewer-toolbar-\'+detail.Width">\
+                                        <li class="viewer-play" @click="choiceCamera(detail.Id)"></li>\
+                                        <li class="viewer-fullscreen" @click="fullScreen(detail.Id)"></li>\
+                                        <li class="viewer-fullscreen-exit" @click="fullScreenExit(detail.Id)"></li>\
+                                        <li class="viewer-close" @click="closeScreen(detail.Id)"></li>\
+                                    </ul>\
+                       </object></div>',
+            methods: {
+                //选择当前点击屏幕
+                choiceCamera(id)
+                {
+                    console.log("===选择屏幕===",id);
+                    for (let i = 0; i < cameraList.length; i++) {
+                        cameraList[i].Checked = cameraList[i].Id == id ? true : false;//设置选中状态
+                    }
+                },
+                //全屏
+                fullScreen(id){
+                    console.log("===全屏===",id);
+                    window.isFullScreen=true;
+                    for (let i = 0; i < cameraList.length; i++) {
+                        cameraList[i].Show=false;//是否显示，只显示全屏的
+                        cameraList[i].Checked=false;//是否选中。修改成选中全屏的
+                        if(cameraList[i].Id == id){
+                            cameraList[i].Width =  MaxWidth ;//设置宽
+                            cameraList[i].Height = MaxHeight ;//设置高
+                            cameraList[i].Show = true;//设置显示
+                            cameraList[i].Checked=true;
+                        }
+                    }
+                },
+                //退出全屏 还原
+                fullScreenExit(id){
+                    console.log("===退出屏幕===",id);
+                    window.isFullScreen=false;
+                    let width = MaxWidth;
+                    let height = MaxHeight;
+                    for (let i = 0; i < cameraList.length; i++) {//找到原来的宽高
+                        if(cameraList[i].Width !=width){
+                            width = cameraList[i].Width;
+                            height = cameraList[i].Height;
+                            break;
+                        }
+                    }
+                    for (let i = 0; i < cameraList.length; i++) {
+                        cameraList[i].Show=true;//全部显示
+                        if(cameraList[i].Id == id){
+                            cameraList[i].Width =  width ;//设置宽
+                            cameraList[i].Height = height ;//设置高
+                        }
+                    }
+                },
+                //关闭当前屏幕
+                closeScreen(id){
+                    console.log("===关闭屏幕===",id);
+                    window.isFullScreen=false;//解决bug 全屏，再 关闭 不能新增
+                    for (let i = 0; i < cameraList.length; i++) {
+                        cameraList[i].Show=true;//解决bug 全屏 再 关闭 其他不显示
+                        if(cameraList[i].Id == id ){
+                            cameraList.splice(i, 1);//删除选中状态的屏幕
+                            i--;//解决bug 全屏删除时，list对象删除了，但是i却没有减
+                        }
+                    }
+
+                }
+            },
+            data: function () {
+                return {}
+            }
+
+        },
+    );
+    new Vue({
+        el: "#myPlayer",
+        data: {
+            cameraList: [],//摄像头列表
+            title: "",
+            url: "",
+            /*分屏显示的设置参数*/
+            isShow: true, /*false 是否显示云控制台*/
+            splitScreenNum: 1, /*分屏数*/
+            splitScreenTitle: "1x1", /*分屏title*/
+            splitScreenOptions: [
+                {text: '1x1', value: '1'},
+                {text: '2x2', value: '2'},
+                {text: '3x3', value: '3'}
+            ],
+
+            player: null,
+            /*api token*/
+            token: "dGltZT0xNDc5Mzg1NjgyMzY0Jm51bT1TUTZJMyZhY2Nlc3NUb2tlbj10cFJBQ0dqOTdPSk1nZG5MUlllTVQzSVRoL090RDB6SSZ2ZXJzaW" +
+            "9uPXYxLjAmYXBwSWQ9aW5pdCZwbGF0Zm9ybT1hbmRyb2lkJnBob25lVVVJRD01YjJkMjk1MzNkNmY0MzM2OGExNzJhNmRhMjk3ZGE1ZA==",
+            /*设备数据*/
+            accessToken: ""
+        },
+        methods: {
+            init(cameraData){
+                this.getAccessToken();
+                this.title = cameraData.Name;
+                this.deviceSerial = cameraData.DeviceSerial;
+                this.channelNo = cameraData.ChannelNo;
+                let isController = cameraData.IsController;
+                if (isController == 1 || isController == "1") {
+                    this.isShow = true;
+                    this.width = MaxWidth;
+                } else {
+                    this.isShow = false;
+                }
+                this.url = "s=4&f=https://open.ys7.com/sdk/js/1.0/ckplayer/m3u8.swf&a=" + cameraData.Url + "&c=0&amp;lv=1&p=1&i=https://open.ys7.com/sdk/js/1.0/demo.html&loaded=loadHandler";
+                if (this.url == null || this.url == "") {
+                } else {
+                    new EZUIPlayer('myPlayer');
+                }
+            },
+            //url截取获得参数
+            getString(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            },
+            //关闭当前的player
+            closePlayer(){
+                this.player = null;
+            },
+            //校验当前是否有选中的player
+            checkChoice(){
+                for (let i = 0; i < this.cameraList.length; i++) {
+                    if (this.cameraList[i].Checked) {
+                        return this.cameraList[i];
+                    }
+                }
+                return null;
+            },
+            //http请求
+            //参数内不能有'&',会造成请求参数中断，
+            httpRequest(url, sendData){
+                return $.ajax({
+                    type: "GET", //访问WebService使用Post方式请求
+                    url: "http://www.ztgis.com:8883/xmtdt.asmx/getYsApiData?para={'Token':'" + this.token + "','url':'" + url + "','sendData':'" + sendData + "'}", //调用WebService
+                    dataType: 'json',
+                });
+            },
+            //对设备进行开始云台控制，开始云台控制之后必须先调用停止云台控制接口才能进行其他操作，包括其他方向的云台转动
+            //token
+            getAccessToken(){
+                let vm = this;//因为是指针，所以修改vm也是在修改this
+                this.httpRequest("https://open.ys7.com/api/lapp/token/get", "").then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("获取token：", data.data.accessToken);
+                    vm.accessToken = data.data.accessToken;
+                });
+
+            },
+            //移动方向
+            //url：https://open.ys7.com/api/lapp/device/ptz/start
+            //data:accessToken=at.4g01l53x0w22xbp30ov33q44app1ns9m&deviceSerial=502608888&channelNo=1&direction=2&speed=1
+            mouseDownControl(direction){
+                let camera = this.checkChoice();
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo + "%26direction=" + direction + "%26speed=" + 1;
+                this.httpRequest("https://open.ys7.com/api/lapp/device/ptz/start", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("云台方向控制：", data.code + data.msg);
+                    if (data.code != 200) {
+                        alert(data.msg);
+                    }
+                });
+            },
+            //停止控制
+            //URl:https://open.ys7.com/api/lapp/device/ptz/stop
+            //data:accessToken=at.25ne3gkr6fa7coh34ys0fl1h9hryc2kr&deviceSerial=568261888&channelNo=1
+            mouseUpControl(){
+                let camera = this.checkChoice();
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
+                this.httpRequest("URl:https://open.ys7.com/api/lapp/device/ptz/stop", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("停止云台控制：", data.code + data.msg);
+                    if (data.code != 200) {
+                        alert(data.msg);
+                    }
+                });
+            },
+            //截图
+            //url:https://open.ys7.com/api/lapp/device/capture
+            //data:accessToken=at.12xp95k63bboast3aq0g5hg22q468929&deviceSerial=427734888&channelNo=1
+            printScreen(){
+                let camera = this.checkChoice();
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
+                this.httpRequest("https://open.ys7.com/api/lapp/device/capture", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("截图结果：", data.msg);
+                    window.open(data.data.picUrl);//为截屏结果打开新窗口
+                })
+            },
+            //回放
+            //url:https://open.ys7.com/api/lapp/live/address/limited
+            //data:accessToken=at.20h863523v1zfck75qgmwhoy7vl2teqp&deviceSerial=427734888&channelNo=1&expireTime=300
+            //expireTime:秒
+            playback(expireTime){
+                let camera = this.checkChoice();
+                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo + "%26expireTime=" + expireTime;
+                this.httpRequest("https://open.ys7.com/api/lapp/live/address/limited", sendData).then(function (json) {
+                    let data = JSON.parse(json.Results);
+                    console.log("回放结果:", data.msg);
+                });
+            },
+            //分屏显示 操作
+            //1*1
+            //2*2
+            //3*3
+            splitScreen(num, title){
+                this.splitScreenNum = num;
+                window.splitScreenNum = this.splitScreenNum;//修改外部
+                this.splitScreenTitle = title;
+                //修改宽高的样式
+                for (let i = 0; i < this.cameraList.length;) {
+                    if (this.cameraList.length > num * num) {//当分屏数少于当前camera，去掉最早加入的
+                        cameraList.splice(0, 1);
+                    } else {
+                        if (this.splitScreenNum == 3) {
+                            this.cameraList[i].Width = MinWidth;
+                            this.cameraList[i].Height = MinHeight;
+                        }
+                        else if (this.splitScreenNum == 2) {
+                            this.cameraList[i].Width = MiddleWidth;
+                            this.cameraList[i].Height = MiddleHeight;
+                        }
+                        else {
+                            this.cameraList[i].Width = MaxWidth;
+                            this.cameraList[i].Height = MaxHeight;
+                        }
+                        i++;
+                    }
+                }
+                window.cameraList = this.cameraList;
+            },
+            //点击某一个分屏
+            //放大 缩小屏幕显示
+            clickScreen(screenId){
+                alert(screenId);
+            }
+        },
+        watch: {
+            accessToken(){
+                console.log("accessToken:" + this.accessToken);
+            }
+        },
+        mounted: function () {
+            this.cameraList = window.cameraList;
+            if (this.accessToken == "") {
+                this.getAccessToken();
+            }
+            /*var flashvars = {
+             f: 'js/HKCamera/ckplayer/m3u8.swf',
+             a: 'http://hls.open.ys7.com/openlive/168a52a8dfef4120855fd13e69d14f1d.m3u8', //此处填写购买获取到的视频播放地址
+             c: 0,
+             p: 1,
+             s: 4,
+             lv: 1
+             };
+             var params = {bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent'};
+             CKobject.embedSWF("js/HKCamera/ckplayer/m3u8.swf", "players", "video", this.width, this.height, flashvars, params);*/
+        },
+        destroyed: function () {
+            this.player = null;
+            console.log("player is close;");
+            alert("player is close;");
+        }
+    });
+</script>
+
+</body>
+</html>

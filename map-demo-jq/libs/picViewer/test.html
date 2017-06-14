@@ -1,0 +1,53 @@
+﻿<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/viewer.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <style>
+    </style>
+
+
+</head>
+
+<body>
+    <ul class="docs-pictures" style="display:block;"></ul>
+<span data-original="assets/img/emma-watson-1.jpg"></span>
+
+    <input type="button" value="test" onclick="showData()" />
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="dist/viewer.js"></script>
+    <script>
+        var pics = "assets/img/emma-watson-1.jpg;" +
+                        "assets/img/emma-watson-2.jpg;" +
+                        "assets/img/emma-watson-3.jpg;" +
+                        "assets/img/emma-watson-4.jpg;" +
+                        "assets/img/emma-watson-5.jpg;" +
+                        "assets/img/emma-watson-6.jpg;" +
+                        "assets/img/emma-watson-7.jpg;" +
+                        "assets/img/emma-watson-8.jpg;" +
+                        "assets/img/emma-watson-9.jpg;";
+            var pics = pics.split(";");
+            $('body').append('<div "><span>12</span><img style="display:none" data-original="' + pics[0] + '" src="' + pics[0] + '"></div>')
+            $('img').viewer({
+                url: 'data-original',
+                navbar: false
+            });
+
+            $('div').on("click", 'span', function () {
+
+            $('img').click();
+            })
+        
+    </script>
+
+</body>
+
+</html>

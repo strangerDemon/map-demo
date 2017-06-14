@@ -1,0 +1,66 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Web网页 demo</title>
+    <link rel="icon" type="image/x-icon" href="//statics.ys7.com/mall/statics/site/favicon.ico">
+    <script src="./ckplayer/ckplayer.js"></script>
+</head>
+<body>
+<!--注意：
+    例子必须使用服务端环境运行，如：Tomcat，iis，注意浏览器的地址，需要http://开头
+    直接运行html文件打开不能看（file:///开头）-->
+<div id="videoPlay" style="width: 700px;height: 393px;">
+    <!--<object pluginspage="http://www.macromedia.com/go/getflashplayer"
+            classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+            codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,3,0,0"
+            width="100%" height="100%" id="video" name="video" align="middle">
+        <embed allowscriptaccess="always"
+               allowfullscreen="true"
+               quality="high"
+               bgcolor="#FFF"
+               wmode="transparent"
+               src="./ckplayer/ckplayer.swf"
+               flashvars="f=https://open.ys7.com/view/demo/ckplayer/m3u8.swf&amp;a=http://open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.hd.m3u8&amp;c=0&amp;p=1&amp;s=4&amp;lv=1"
+               width="100%"
+               height="100%"
+               name="video"
+               id="video"
+               align="middle"
+               type="application/x-shockwave-flash"
+               pluginspage="http://www.macromedia.com/go/getflashplayer">
+    </object>-->
+   <!-- <object pluginspage="http://www.macromedia.com/go/getflashplayer"
+            classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+            codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,3,0,0"
+            name="myPlayerflashId">
+        <embed allowscriptaccess="always"
+               allowfullscreen="true"
+               quality="high"
+               bgcolor="#FFF"
+               wmode="transparent"
+               src="https://open.ys7.com/sdk/js/1.0/ckplayer/ckplayer.swf"
+               flashvars="f=https://open.ys7.com/view/demo/ckplayer/m3u8.swf&amp;a=http://hls.open.ys7.com/openlive/168a52a8dfef4120855fd13e69d14f1d.m3u8&amp;c=0&amp;p=1&amp;s=4&amp;lv=1"
+                id="myPlayerflashId"
+               name="myPlayerflashId"
+               type="application/x-shockwave-flash"
+               height="100%"
+               height="100%"
+               type="application/x-shockwave-flash"
+               pluginspage="http://www.macromedia.com/go/getflashplayer">
+    </object>-->
+</div>
+<script>
+    var flashvars;
+    flashvars = {
+        f: 'ckplayer/m3u8.swf',
+        a: 'http://open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.hd.m3u8', //此处填写购买获取到的视频播放地址
+        c: 0,
+        p: 1,
+        s: 4,
+        lv: 1
+    };
+    var params = {bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent'};
+    CKobject.embedSWF("./ckplayer/ckplayer.swf", "videoPlay", "video", "100%", "100%", flashvars, params);
+</script>
+
+</body>
+</html>

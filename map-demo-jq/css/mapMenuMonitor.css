@@ -1,0 +1,326 @@
+﻿.searchResultBox {
+    box-shadow: 1px 1px 3px rgba(51, 133, 255, 0.35);
+    width: 360px;
+    z-index: 10;
+    height: auto;
+    border-style: none;
+    background-color: white;
+    padding: 0px;
+    position: absolute;
+    top: 70px;
+    left: 20px;
+}
+
+
+.searchResultBoxtop {
+    width: 100%;
+    height: 30px;
+    border: solid rgba(51, 133, 255, 0.3);
+    border-width: 0px 0px 0.5px 0px;
+    box-shadow: none;
+    background-color: #3385FF;
+    color: white;
+}
+
+
+.searchResultBox .middle {
+    box-shadow: none;
+}
+
+.searchResultBoxbottom {
+    width: 100%;
+    height: 35px;
+    border-width: 0.5px 0px 0px 0px;
+    /*position: absolute;*/ /*or前面的是absolute就可以用*/
+    left: 0;
+    bottom: 0;
+    box-shadow: none;
+    background-color: #3385FF;
+}
+
+.searchResultItems {
+}
+
+.item {
+    width: 100%;
+    height: 38PX;
+    box-shadow: none;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-top: 5px;
+    color: #565656;
+}
+
+.odd {
+    background-color: #E6E6E6;
+}
+
+    .odd:hover {
+        background-color: #3385FF;
+        color: white;
+    }
+
+.item:hover {
+    background-color: #3385FF;
+    color: white;
+}
+
+.item .selected {
+    background-color: #3385FF;
+    color: white;
+}
+
+.item .num1 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -107px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num2 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -172px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num3 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -237px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num4 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -302px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num5 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -366px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num6 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -431px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num7 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -496px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num8 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -561px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num9 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -626px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num10 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -691px -243px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num11 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -107px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num12 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -172px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num13 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -237px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num14 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -302px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num15 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -366px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num16 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -431px -417px;
+    float: left;
+    width: 19px;
+    height: 32px;
+}
+
+.item .num17 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -496px -417px;
+    float: left;
+    width: 20px;
+    height: 32px;
+}
+
+.item .num18 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -561px -417px;
+    float: left;
+    width: 20px;
+    height: 32px;
+}
+
+.item .num19 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -626px -417px;
+    float: left;
+    width: 20px;
+    height: 32px;
+}
+
+.item .num20 {
+    background-image: url("/img/item_mapmarker.png");
+    background-position: -691px -417px;
+    float: left;
+    width: 20px;
+    height: 32px;
+}
+
+.item .txt {
+    float: left;
+    margin-left: 10px;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.divPager {
+    float: left;
+    font-size: 13px;
+}
+
+    .divPager .homePage {
+        width: 35px;
+        height: 20px;
+        border: solid rgba(51,133,255, 0.3);
+        border-width: 0.5px 0.5px 0.5px 0.5px;
+        padding-left: 4px;
+        padding-top: 3px;
+        cursor: pointer;
+    }
+
+        .divPager .homePage:hover {
+            background: #3385FF;
+            color: white;
+        }
+
+
+
+    .divPager .prePage {
+        width: 50px;
+        height: 20px;
+        border: solid rgba(51,133,255, 0.3);
+        border-width: 0.5px 0.5px 0.5px 0.5px;
+        padding-left: 3px;
+        padding-top: 2px;
+        cursor: pointer;
+        margin-left: 3px;
+    }
+
+        .divPager .prePage:hover {
+            background: #3385FF;
+            color: white;
+        }
+
+    .divPager .num {
+        width: auto;
+        height: 20px;
+        border: solid rgba(51,133,255, 0.3);
+        border-width: 0.5px 0.5px 0.5px 0.5px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 2px;
+        cursor: pointer;
+        margin-left: 3px;
+    }
+
+        .divPager .num:hover {
+            background: #3385FF;
+            color: white;
+        }
+
+    .divPager .nextPage {
+        width: 50px;
+        height: 20px;
+        border: solid rgba(51,133,255, 0.3);
+        border-width: 0.5px 0.5px 0.5px 0.5px;
+        padding-left: 3px;
+        padding-top: 2px;
+        cursor: pointer;
+        margin-left: 3px;
+    }
+
+        .divPager .nextPage:hover {
+            background: #3385FF;
+            color: white;
+        }
+
+    .divPager .lastPage {
+        width: 35px;
+        height: 20px;
+        border: solid rgba(51,133,255, 0.3);
+        border-width: 0.5px 0.5px 0.5px 0.5px;
+        padding-left: 3px;
+        padding-top: 2px;
+        cursor: pointer;
+        margin-left: 3px;
+    }
+
+        .divPager .lastPage:hover {
+            background: #3385FF;
+            color: white;
+        }
+
