@@ -45,8 +45,7 @@ var gpsxy = [];
 var xys = [];
 var dataIndex = 0;
 window.socket;
-window.token = "dGltZT0xNDc5Mzg1NjgyMzY0Jm51bT1TUTZJMyZhY2Nlc3NUb2tlbj10cFJBQ0dqOTdPSk1nZG5MUlllTVQzSVRoL090RDB6SSZ2ZXJzaW" +
-    "9uPXYxLjAmYXBwSWQ9aW5pdCZwbGF0Zm9ybT1hbmRyb2lkJnBob25lVVVJRD01YjJkMjk1MzNkNmY0MzM2OGExNzJhNmRhMjk3ZGE1ZA==";
+window.token = "**自定义api token";
 $(function () {
     var namespace = ["esri/map",
         "esri/layers/ArcGISTiledMapServiceLayer",
