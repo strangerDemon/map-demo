@@ -1,0 +1,15 @@
+[
+	{
+		"id":"1",
+		"name":"厦门矢量地图",
+		"publishYear":"-",
+		"maptype":"0",
+		"mapnature":"1",
+		"beginlevel":"1",
+		"endlevel":"20",
+		"isshow":"1",
+		"status":"3",
+		"istaglayer":"0",
+		"url":"http://mapapi.xmtfj.gov.cn/RemoteRest/services/CGCS_XMMAP/MapServer"
+	}
+]

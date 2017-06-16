@@ -27,6 +27,9 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  methods:{
+      setMsg:function(msg){}
   }
 }
 </script>
