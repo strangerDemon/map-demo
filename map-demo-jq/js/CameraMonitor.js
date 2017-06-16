@@ -25,21 +25,23 @@ function drawCamerePoint(){
         for (let i = 0; i < cameraList.length; i++) {
             var CameraPoint = new esri.geometry.Point(parseFloat(cameraList[i].Lng), parseFloat(cameraList[i].Lat), new esri.SpatialReference({wkid: 4490}));
             var CameraAGraphic = new esri.Graphic(CameraPoint, new esri.symbol.PictureMarkerSymbol('images/video.png', 16, 16));//面，以点汇面
-            var CameraLayer= new esri.layers.GraphicsLayer({id: "cameraMap"+cameraList[i].Id});//layer，在图层中添加面
+            var TextAGraphic = new esri.Graphic(CameraPoint, new esri.symbol.TextSymbol(cameraList[i].Name).setOffset(15,15));//文字 ，偏移
+            var CameraLayer = new esri.layers.GraphicsLayer({id: "cameraMap" + cameraList[i].Id});//layer，在图层中添加面
             //无论何时点击，都更新ssmap.map中的cameralayer图层
             ssmap.map.addLayer(CameraLayer);
             CameraLayer.add(CameraAGraphic);
+            CameraLayer.add(TextAGraphic);
             //只能在layer和map上加事件
-            CameraLayer.on("click",function(){
+            CameraLayer.on("click", function () {
                 //camera事件
-                window.caremaMonitor.init(cameraList[i]);
+                window.cameraMonitor.init(cameraList[i]);
             });
-            CameraLayer.on("mouse-over",function(){//内部不能用CameraLayer，会混乱，用this
-                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('images/video.png', 32, 32);
+            CameraLayer.on("mouse-over", function () {//内部不能用CameraLayer，会混乱，用this
+                this.graphics[0].symbol = new esri.symbol.PictureMarkerSymbol('images/video.png', 32, 32);
                 this.refresh();
             });
-            CameraLayer.on("mouse-out",function(){
-                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('images/video.png', 16,16);
+            CameraLayer.on("mouse-out", function () {
+                this.graphics[0].symbol = new esri.symbol.PictureMarkerSymbol('images/video.png', 16, 16);
                 this.refresh();
             });
 
@@ -55,13 +57,19 @@ function drawCamerePoint(){
 }
 //做成一个全局变量，而不是CameraLayer.on("click",function(){内的临时变量
 $(function () {
-    window.caremaMonitor=new Vue({
+    window.cameraMonitor=new Vue({
             el:"#camera",
             //变量
             data: {
                 cameraData: null,
                 isShow:false,
                 iframeUrl:"",
+                /*样式*/
+                width:800,
+                height:430,
+                position: 'absolute',
+                top: 80,
+                left: 10,
             },
             //监视
             watch: {
@@ -75,7 +83,7 @@ $(function () {
                     this.cameraData=cameraData;
                     this.isShow=true;
                     //连接远程摄像头
-                    this.$el.style="height:430px;width:800px;position: absolute;top: 80px;left: 10px;z-index: 999;";
+                    //this.$el.style="height:430px;width:800px;position: absolute;top: 80px;left: 10px;z-index: 999;";
                     var frames=document.getElementById("cameraIframe");
                     frames.contentWindow.setCameraList(this.cameraData.Id+"|"+this.cameraData.Name+"|"+this.cameraData.Url+"|"+this.cameraData.IsController+"|"+this.cameraData.DeviceSerial+
                     "|"+this.cameraData.ChannelNo);

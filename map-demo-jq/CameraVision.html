@@ -6,48 +6,29 @@
     <meta name="renderer" content="webkit">
     <title>监控</title>
     <!--vue-->
-    <script src="vue.js"></script>
+    <script src="js/vue.js"></script>
 
-    <script src="libs/HKCamera/ckplayer/ckplayer.js"></script>
+    <script src="js/HKCamera/ckplayer/ckplayer.js"></script>
 
-    <script src="jquery-3.2.1.min.js"></script>
-    <link rel='stylesheet' href='libs/HKCamera/css/camera.css'>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <link rel='stylesheet' href='js/HKCamera/css/camera.css'>
     <!-- bootstrap button-->
-    <link rel='stylesheet' href='libs/button/css/buttons.css'>
-    <script src="libs/button/buttons.js"></script>
-    <link rel='stylesheet' href='libs/button/css/font-awesome.css'>
-    <!--ckplayer 内按钮-->
-    <link rel="stylesheet" href="libs/viewer/viewer.css">
-    <script src="libs/viewer/viewer.js"></script>
+    <link rel='stylesheet' href='js/map/lib/button/css/buttons.css'>
+    <script src="js/map/lib/button/buttons.js"></script>
+    <link rel='stylesheet' href='js/map/lib/button/css/font-awesome.css'>
+    <!--ckplayer 下部按钮-->
+    <link rel="stylesheet" href="js/map/lib/viewer/viewer.css">
+    <script src="js/map/lib/viewer/viewer.js"></script>
 </head>
 <body style="margin:0px;">
 <div id="myPlayer">
-    <div id="players" style="position:absolute;max-width: 636px;max-height: 436px;">
+    <div id="players" style="position:absolute;/*max-width: 636px;max-height: 436px;*/">
         <v-embed v-for="camera in cameraList" :detail="camera" key="item"></v-embed>
-        <!--<object pluginspage="http://www.macromedia.com/go/getflashplayer"
-                classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-                codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,3,0,0"
-                name="myPlayerflashId">
-            <embed allowscriptaccess="always"
-                   allowfullscreen="true"
-                   quality="high"
-                   bgcolor="#FFF"
-                   wmode="transparent"
-                   src="https://open.ys7.com/sdk/js/1.0/ckplayer/ckplayer.swf"
-                   :flashvars="url"
-                   id="myPlayerflashId"
-                   name="myPlayerflashId"
-                   type="application/x-shockwave-flash"
-                   :height="height+'px'"
-                   :width="width+'px'"
-                   align="middle"
-                   pluginspage="http://www.macromedia.com/go/getflashplayer">
-        </object>-->
     </div>
-    <div v-show="isShow" style="position:absolute;right:0.5em">
+    <div v-show="isShow" style="position:absolute;right:0.5em;top: 1em;">
 
         <h2>云台控制</h2>
-
+        <div class="buttonDiv"></div>
         <button class="button button-primary button-circle "
                 v-on:mousedown="mouseDownControl(4);" v-on:mouseup="mouseUpControl" title="左上">
             <i class="fa fa-arrow-left" style="transform:rotate(45deg);"></i>
@@ -100,6 +81,12 @@
                 v-on:mouseup="mouseUpControl"><i class="fa fa-plus"></i>
         </button>
         <div class="buttonDiv"></div>
+        <button class="button button-primary button-circle " v-on:mousedown="narrowScreen()"><i class="fa fa-minus"></i>
+        </button>
+        <span>屏幕</span>
+        <button class="button button-primary button-circle " v-on:mousedown="enlargeScreen()"><i class="fa fa-plus"></i>
+        </button>
+        <div class="buttonDiv"></div>
         <span>分屏：</span>
         <span class="button-dropdown" data-buttons="dropdown">
             <button class="button button-rounded" style="padding:0 10px;">
@@ -113,7 +100,11 @@
             </ul>
         </span>
         <div class="buttonDiv"></div>
-        <button class="button button-primary button-rounded button-normal " v-on:mousedown="printScreen()">截图
+       <!-- <span>回放：</span>
+        <input style="max-width: 70px;height: 30px;border-radius: 4px;background-color: #eaeaea;"
+               placeholder="秒" type="number" v-model="expireTime" v-on:keyup.enter="playBack"/>
+        <div class="buttonDiv"></div>-->
+        <button class="button button-primary button-rounded"  v-on:mousedown="printScreen">截图
         </button>
 
     </div>
@@ -126,10 +117,15 @@
         MiddleWidth = 300,
         MiddleHeight = 210,
         MinWidth = 200,
-        MinHeight = 130;
+        MinHeight = 130,
+        MaxSize=2.5,
+        MinSize=1,
+        SizeInterval=0.3;
+
     window.cameraList = [];//摄像头列表
     window.splitScreenNum = 1;//分屏数
     window.isFullScreen=false;//是否是全屏状态，解决 扩大/关闭 扩大/新增 bug
+    window.screenTimes=1;//缩放倍数
     function setCameraList(camera) {
         var info = camera.split("|");//单个的数据
         for (var i = 0; i < cameraList.length; i++) {
@@ -143,19 +139,19 @@
         } else {
             cameraList.splice(0, 1);//去掉最早加入的
         }
-        let width = MaxWidth;
-        let height = MaxHeight;
+        let width = MaxWidth*window.screenTimes;
+        let height = MaxHeight*window.screenTimes;
         if (window.splitScreenNum == 3) {
-            width = MinWidth;
-            height = MinHeight;
+            width = MinWidth*window.screenTimes;
+            height = MinHeight*window.screenTimes;
         }
         else if (window.splitScreenNum == 2) {
-            width = MiddleWidth;
-            height = MiddleHeight;
+            width = MiddleWidth*window.screenTimes;
+            height = MiddleHeight*window.screenTimes;
         }
         else {
-            width = MaxWidth;
-            height = MaxHeight;
+            width = MaxWidth*window.screenTimes;
+            height = MaxHeight*window.screenTimes;
         }
         let d = {
             "Id": info[0],
@@ -185,8 +181,8 @@
                                 quality="high"\
                                 bgcolor="#FFF"\
                                 wmode="transparent"\
-                                src="https://open.ys7.com/sdk/js/1.0/ckplayer/ckplayer.swf"\
-                                :flashvars="\'s=4&f=https://open.ys7.com/sdk/js/1.0/ckplayer/m3u8.swf&a=\'+detail.Url+\'&c=0&amp;lv=1&p=1&i=https://open.ys7.com/sdk/js/1.0/demo.html&loaded=loadHandler\'"\
+                                src="./js/HKCamera/ckplayer/ckplayer.swf"\
+                                :flashvars="\'s=4&f=http://localhost:63342/WEB/js/HKCamera/ckplayer/m3u8.swf&a=\'+detail.Url+\'&c=0&lv=1&p=1\'"\
                                 :id="detail.Id"\
                                 :name="detail.Id"\
                                 type="application/x-shockwave-flash"\
@@ -196,11 +192,12 @@
                                 style="margin: 2px 0 0 5px;"\
                                 align="middle"\
                                 pluginspage="http://www.macromedia.com/go/getflashplayer">\
-                                     <ul :class="\'viewer-toolbar-\'+detail.Width">\
-                                        <li class="viewer-play" @click="choiceCamera(detail.Id)"></li>\
-                                        <li class="viewer-fullscreen" @click="fullScreen(detail.Id)"></li>\
-                                        <li class="viewer-fullscreen-exit" @click="fullScreenExit(detail.Id)"></li>\
+                                     <ul class="viewer-toolbar" v-bind:style="{width: detail.Width+\'px\',marginTop:35-detail.Height+\'px\' }">\
+                                        <span>{{detail.Name}}</span>\
                                         <li class="viewer-close" @click="closeScreen(detail.Id)"></li>\
+                                        <li class="viewer-fullscreen-exit" @click="fullScreenExit(detail.Id)"></li>\
+                                        <li class="viewer-fullscreen" @click="fullScreen(detail.Id)"></li>\
+                                        <li class="viewer-play" @click="choiceCamera(detail.Id)"></li>\
                                     </ul>\
                        </object></div>',
             methods: {
@@ -220,8 +217,8 @@
                         cameraList[i].Show=false;//是否显示，只显示全屏的
                         cameraList[i].Checked=false;//是否选中。修改成选中全屏的
                         if(cameraList[i].Id == id){
-                            cameraList[i].Width =  MaxWidth ;//设置宽
-                            cameraList[i].Height = MaxHeight ;//设置高
+                            cameraList[i].Width =  MaxWidth* window.screenTimes;//设置宽
+                            cameraList[i].Height = MaxHeight *window.screenTimes;//设置高
                             cameraList[i].Show = true;//设置显示
                             cameraList[i].Checked=true;
                         }
@@ -229,23 +226,22 @@
                 },
                 //退出全屏 还原
                 fullScreenExit(id){
-                    console.log("===退出屏幕===",id);
-                    window.isFullScreen=false;
-                    let width = MaxWidth;
-                    let height = MaxHeight;
-                    for (let i = 0; i < cameraList.length; i++) {//找到原来的宽高
-                        if(cameraList[i].Width !=width){
-                            width = cameraList[i].Width;
-                            height = cameraList[i].Height;
-                            break;
+                    console.log("===退出屏幕===", id);
+                    window.isFullScreen = false;
+                    for (let i = 0; i < cameraList.length;i++) {
+                        if (splitScreenNum == 3) {
+                            cameraList[i].Width = MinWidth * window.screenTimes;
+                            cameraList[i].Height = MinHeight * window.screenTimes;
                         }
-                    }
-                    for (let i = 0; i < cameraList.length; i++) {
-                        cameraList[i].Show=true;//全部显示
-                        if(cameraList[i].Id == id){
-                            cameraList[i].Width =  width ;//设置宽
-                            cameraList[i].Height = height ;//设置高
+                        else if (splitScreenNum == 2) {
+                            cameraList[i].Width = MiddleWidth * window.screenTimes;
+                            cameraList[i].Height = MiddleHeight * window.screenTimes;
                         }
+                        else {
+                            cameraList[i].Width = MaxWidth * window.screenTimes;
+                            cameraList[i].Height = MaxHeight * window.screenTimes;
+                        }
+                        cameraList[i].Show = true;//设置显示
                     }
                 },
                 //关闭当前屏幕
@@ -288,12 +284,12 @@
             /*api token*/
             token: "dGltZT0xNDc5Mzg1NjgyMzY0Jm51bT1TUTZJMyZhY2Nlc3NUb2tlbj10cFJBQ0dqOTdPSk1nZG5MUlllTVQzSVRoL090RDB6SSZ2ZXJzaW" +
             "9uPXYxLjAmYXBwSWQ9aW5pdCZwbGF0Zm9ybT1hbmRyb2lkJnBob25lVVVJRD01YjJkMjk1MzNkNmY0MzM2OGExNzJhNmRhMjk3ZGE1ZA==",
-            /*设备数据*/
-            accessToken: ""
+            //回播时间 有效时间
+            expireTime:0,
         },
         methods: {
             init(cameraData){
-                this.getAccessToken();
+                //this.getAccessToken();
                 this.title = cameraData.Name;
                 this.deviceSerial = cameraData.DeviceSerial;
                 this.channelNo = cameraData.ChannelNo;
@@ -334,28 +330,26 @@
             //参数内不能有'&',会造成请求参数中断，
             httpRequest(url, sendData){
                 return $.ajax({
-                    type: "GET", //访问WebService使用Post方式请求
+                    type: "GET", //访问WebService使用Post方式请求www.ztgis.com:8883
                     url: "http://www.ztgis.com:8883/xmtdt.asmx/getYsApiData?para={'Token':'" + this.token + "','url':'" + url + "','sendData':'" + sendData + "'}", //调用WebService
                     dataType: 'json',
                 });
             },
             //对设备进行开始云台控制，开始云台控制之后必须先调用停止云台控制接口才能进行其他操作，包括其他方向的云台转动
-            //token
+            //token 萤石的accessToken放到服务器端，不再返回到web前端 已废弃
             getAccessToken(){
                 let vm = this;//因为是指针，所以修改vm也是在修改this
                 this.httpRequest("https://open.ys7.com/api/lapp/token/get", "").then(function (json) {
                     let data = JSON.parse(json.Results);
                     console.log("获取token：", data.data.accessToken);
-                    vm.accessToken = data.data.accessToken;
                 });
-
             },
             //移动方向
             //url：https://open.ys7.com/api/lapp/device/ptz/start
             //data:accessToken=at.4g01l53x0w22xbp30ov33q44app1ns9m&deviceSerial=502608888&channelNo=1&direction=2&speed=1
             mouseDownControl(direction){
                 let camera = this.checkChoice();
-                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo + "%26direction=" + direction + "%26speed=" + 1;
+                let sendData = "deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo + "%26direction=" + direction + "%26speed=" + 1;
                 this.httpRequest("https://open.ys7.com/api/lapp/device/ptz/start", sendData).then(function (json) {
                     let data = JSON.parse(json.Results);
                     console.log("云台方向控制：", data.code + data.msg);
@@ -369,7 +363,7 @@
             //data:accessToken=at.25ne3gkr6fa7coh34ys0fl1h9hryc2kr&deviceSerial=568261888&channelNo=1
             mouseUpControl(){
                 let camera = this.checkChoice();
-                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
+                let sendData = "deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
                 this.httpRequest("URl:https://open.ys7.com/api/lapp/device/ptz/stop", sendData).then(function (json) {
                     let data = JSON.parse(json.Results);
                     console.log("停止云台控制：", data.code + data.msg);
@@ -383,23 +377,45 @@
             //data:accessToken=at.12xp95k63bboast3aq0g5hg22q468929&deviceSerial=427734888&channelNo=1
             printScreen(){
                 let camera = this.checkChoice();
-                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
+                let sendData = "deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
                 this.httpRequest("https://open.ys7.com/api/lapp/device/capture", sendData).then(function (json) {
                     let data = JSON.parse(json.Results);
                     console.log("截图结果：", data.msg);
                     window.open(data.data.picUrl);//为截屏结果打开新窗口
                 })
             },
-            //回放
+            //回放  视频地址的有效时间 过期时间
             //url:https://open.ys7.com/api/lapp/live/address/limited
             //data:accessToken=at.20h863523v1zfck75qgmwhoy7vl2teqp&deviceSerial=427734888&channelNo=1&expireTime=300
             //expireTime:秒
-            playback(expireTime){
+            playBack(){
+                if(this.expireTime>62208000){
+                    alert("最大回播时间为720天：62208000s");
+                }else if(this.expireTime<300&&this.expireTime!=0){
+                    alert("最小回播时间为5分钟：300s");
+                }else {
+                    this.playBackAction();
+                }
+            },
+            playBackReSet(){
+                this.expireTime=0;
+                this.playBackAction();
+            },
+            playBackAction(){
+                let list=this.cameraList;
                 let camera = this.checkChoice();
-                let sendData = "accessToken=" + this.accessToken + "%26deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo + "%26expireTime=" + expireTime;
+                let sendData="deviceSerial=" + camera.DeviceSerial + "%26channelNo=" + camera.ChannelNo;
+                sendData =this.expireTime==0? sendData: sendData+ "%26expireTime=" + this.expireTime;
                 this.httpRequest("https://open.ys7.com/api/lapp/live/address/limited", sendData).then(function (json) {
                     let data = JSON.parse(json.Results);
                     console.log("回放结果:", data.msg);
+                    //修改当前的camera url
+                    for (let i = 0; i < list.length; i++) {
+                        if (list[i].Id==camera.Id) {
+                            list[i].Url="s=4&f=https://open.ys7.com/sdk/js/1.0/ckplayer/m3u8.swf&a=" + data.data.liveAddress + "&c=0&amp;lv=1&p=1&i=https://open.ys7.com/sdk/js/1.0/demo.html&loaded=loadHandler";
+                            ;
+                        }
+                    }
                 });
             },
             //分屏显示 操作
@@ -411,31 +427,43 @@
                 window.splitScreenNum = this.splitScreenNum;//修改外部
                 this.splitScreenTitle = title;
                 //修改宽高的样式
+                this.updateCameraListAttr();
+            },
+            //iframe 放大
+            enlargeScreen(){
+                window.screenTimes=window.screenTimes<MaxSize?window.screenTimes+SizeInterval:window.screenTimes;
+                this.updateCameraListAttr();
+            },
+            //iframe 缩小
+            narrowScreen(){
+                window.screenTimes=window.screenTimes>MinSize?window.screenTimes-SizeInterval:window.screenTimes;
+                this.updateCameraListAttr();
+            },
+            //修改摄像头列表参数
+            updateCameraListAttr(){
                 for (let i = 0; i < this.cameraList.length;) {
-                    if (this.cameraList.length > num * num) {//当分屏数少于当前camera，去掉最早加入的
+                    if (this.cameraList.length > this.splitScreenNum * this.splitScreenNum) {//当分屏数少于当前camera，去掉最早加入的
                         cameraList.splice(0, 1);
                     } else {
                         if (this.splitScreenNum == 3) {
-                            this.cameraList[i].Width = MinWidth;
-                            this.cameraList[i].Height = MinHeight;
+                            this.cameraList[i].Width = MinWidth*window.screenTimes;
+                            this.cameraList[i].Height = MinHeight*window.screenTimes;
                         }
                         else if (this.splitScreenNum == 2) {
-                            this.cameraList[i].Width = MiddleWidth;
-                            this.cameraList[i].Height = MiddleHeight;
+                            this.cameraList[i].Width = MiddleWidth*window.screenTimes;
+                            this.cameraList[i].Height = MiddleHeight*window.screenTimes;
                         }
                         else {
-                            this.cameraList[i].Width = MaxWidth;
-                            this.cameraList[i].Height = MaxHeight;
+                            this.cameraList[i].Width = MaxWidth*window.screenTimes;
+                            this.cameraList[i].Height = MaxHeight*window.screenTimes;
                         }
                         i++;
                     }
                 }
                 window.cameraList = this.cameraList;
-            },
-            //点击某一个分屏
-            //放大 缩小屏幕显示
-            clickScreen(screenId){
-                alert(screenId);
+                //设置iframe的外在宽高
+                window.parent.cameraMonitor.height=MaxHeight*window.screenTimes+10;
+                window.parent.cameraMonitor.width=MaxWidth*window.screenTimes+170;
             }
         },
         watch: {
@@ -445,9 +473,6 @@
         },
         mounted: function () {
             this.cameraList = window.cameraList;
-            if (this.accessToken == "") {
-                this.getAccessToken();
-            }
             /*var flashvars = {
              f: 'js/HKCamera/ckplayer/m3u8.swf',
              a: 'http://hls.open.ys7.com/openlive/168a52a8dfef4120855fd13e69d14f1d.m3u8', //此处填写购买获取到的视频播放地址

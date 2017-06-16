@@ -4,37 +4,79 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>马拉松实时监测系统</title>
     <!--vue-->
-    <script src="vue.js"></script>
-    <script src="jquery-3.2.1.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" type="text/css" href="http://www.ztgis.com:8868/arcgis_js_api/library/3.14/3.14/dijit/themes/tundra/tundra.css" />
     <link rel="stylesheet" type="text/css" href="http://www.ztgis.com:8868/arcgis_js_api/library/3.14/3.14/esri/css/esri.css" />
     <script src="http://www.ztgis.com:8868/arcgis_js_api/library/3.14/3.14/init.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="http://map.xmtfj.gov.cn:8000/arcgis_js_api/library/3.14/3.14/dijit/themes/tundra/tundra.css" />
+    <link rel="stylesheet" type="text/css" href="http://map.xmtfj.gov.cn:8000/arcgis_js_api/library/3.14/3.14/esri/css/esri.css" />
+    <script src="http://map.xmtfj.gov.cn:8000/arcgis_js_api/library/3.14/3.14/init.js"></script>
 
-    <script src="js/init.js"></script>
+    <script src="js/map/init.js"></script>
 
-    <script src="libs/hcharts/highcharts.js"></script>
-    <script src="libs/hcharts/exporting.js"></script>
-    <script src="libs/hcharts/highcharts-zh_CN.js"></script>
+    <script src="js/hcharts/highcharts.js"></script>
+    <script src="js/hcharts/exporting.js"></script>
+    <script src="js/hcharts/highcharts-zh_CN.js"></script>
 
-    <link href="css/map.css" rel="stylesheet" type="text/css" />
-    <script src="js/ssconfig.js"></script>
-    <script src="js/ssmap.js"></script>
+    <link href="css/map/route.css" rel="stylesheet" />
+    <link href="css/map/esriPopupWindow.css" rel="stylesheet" />
+    <link href="css/map/map.css" rel="stylesheet" type="text/css" />
+    <link href="css/map/marker.css" rel="stylesheet" type="text/css" />
+    <script src="js/map/ts_measure.js"></script>
+    <script src="js/map/ssmapmarker.js"></script>
+    <script src="js/map/ssutil.js"></script>
+    <script src="js/map/ssmapshare.js"></script>
 
-    <script src="js/mapMenuMonitor.js"></script>
+    <script src="js/map/ssconfig.js"></script>
+    <script src="js/map/ts_broader.js"></script>
+    <script src="js/map/ssmap.js"></script>
+    <script src="js/map/tc_geotopology.js"></script>
+    <script src="js/map/lib/jpicker/jpicker-1.1.6.js"></script>
+    <link href="js/map/lib/jpicker/css/jPicker-1.1.6.css" rel="stylesheet" type="text/css" />
+    <script src="js/map/lib/jquery.qrcode.min.js"></script>
+    <script src="js/map/lib/fullscreen-plus.js"></script>
+    <script src="js/map/lib/zTree/js/jquery.ztree.all-3.5.min.js"></script>
+    <link href="js/map/lib/zTree/css/zTreeStyle/metro.css" rel="stylesheet" type="text/css" />
+    <script src="js/map/ssthematicmap.js"></script>
+    <script src="js/map/ssidentify.js"></script>
+    <script src="js/map/lib/picViewer/dist/viewer.js"></script>
+    <link href="js/map/lib/picViewer/dist/viewer.css" rel="stylesheet" type="text/css" />
+    <script src="js/map/ssinteratedquery.js"></script>
+    <script src="js/map/ssroute.js"></script>
+    <script src="js/map/lib/context/context.js"></script>
+    <link href="js/map/lib/context/context.standalone.css" rel="stylesheet" />
+    <script src="js/map/ssmapcontrast.js"></script>
+<!--
+    <script src="js/map/queryPage.js"></script>
+    <link href="css/queryPage.css" rel="stylesheet" type="text/css" />-->
+
+
+    <script src="js/map/lib/jpicker/jpicker-1.1.6.js"></script>
+    <link href="js/map/lib/jpicker/css/jPicker-1.1.6.css" rel="stylesheet" type="text/css" />
+    <script src="js/map/mapMenuMonitor.js"></script>
     <link href="css/mapMenuMonitor.css" rel="stylesheet" type="text/css" />
-    <script src="js/mapMenuSituation.js"></script>
-    <script src="js/mapMenuAbnormal.js"></script>
-    <script src="js/mapMenuStatistics.js"></script>
-    <script src="js/CameraMonitor.js"></script>
+    <script src="js/map/mapMenuSituation.js"></script>
+    <script src="js/map/mapMenuBaiduConvertor.js"></script>
+    <script src="js/map/mapMenuAbnormal.js"></script>
+    <script src="js/map/mapMenuStatistics.js"></script>
+    <script src="js/map/CameraMonitor.js"></script>
 
+    <script src="js/map/lib/artDialog4.17/jquery.artDialog.js"></script>
+    <link id="artDialogSkin" href="js/map/lib/artDialog4.17/skins/aero.css" rel="stylesheet" />
+    <script src="js/map/ssmyPosition.js"></script>
 
+    <script>
+        //var strImageDirBaseUrl = "<% = ConfigString.strImageHttpBaseUrl %>" + "/";
+        var strImageDirBaseUrl = "images/map/";
+    </script>
 </head>
 <body>
     <div id="map"></div>
-    <div id="camera" v-show="isShow">
+    <div id="camera" v-show="isShow" class="camera" v-bind:style="{width:width+'px',height:height+'px',top: top+'px',left: left+'px',position:position}">
         <iframe id="cameraIframe" src='CameraVision.html' style="background-color: #ffffff;width: 100%;height: 100%;"> </iframe>
         <div class="map-user-close">
             <a href="javascript:setAttr('#camera','style','display:none;')" @click="close"><img src="images/map-user-close.png" width="20" height="20" /></a>
@@ -391,6 +433,715 @@
         </div>
     </div>
     <!--赛况回顾 ------data-dojo-type="dijit/Toolbar"-----END---->
+
+    <!-- 菜单条 -->
+    <div class="map_btn hideElem" style="width:46px">
+        <ul>
+            <li class="map-btn-1"><a href="javascript:void(0)" class="BtnFullScreen"><img src="images/mapico2.png" width="46" height="46" title="全屏" /></a></li>
+            <li class="map-btn-2"><a href="javascript:void(0)"><img src="images/map/t_duibi_1.png"  title="对比" /></a></li>
+            <li class="map-btn-3"><a href="javascript:void(0)"><img src="images/mapico5.png" width="46" height="46" title="删除" /></a></li>
+            <li class="map-btn-4"><a href="javascript:void(0)"><img src="images/mapico21.png" width="46" height="46" title="专题图" /></a></li>
+            <li class="map-btn-5"><a href="javascript:void(0)"><img src="images/mapico17.png" width="46" height="46" title="搜索"/></a></li>
+            <li class="map-btn-6"><a href="javascript:void(0)"><img src="images/mapico7.png" width="46" height="46" title="长度测量" /></a></li>
+            <li class="map-btn-7"><a href="javascript:void(0)"><img src="images/mapico8.png" width="46" height="46" title="面积测量" /></a></li>
+            <li class="map-btn-8"><a href="javascript:void(0)"><img src="images/mapico11.png" width="46" height="46" title="底图切换" /></a></li>
+            <li class="map-btn-9"><a href="javascript:void(0)"><img src="images/mapico22.png" width="46" height="46" title="标绘" /></a></li>
+            <li class="map-btn-10"><a href="javascript:void(0)"><img src="images/mapico9.png" width="46" height="46" title="放大" /></a></li>
+            <li class="map-btn-11"><a href="javascript:void(0)"><img src="images/mapico10.png" width="46" height="46" title="缩小" /></a></li>
+            <li class="map-btn-12" id="myPosition"><a href="javascript:void(0)"><img src="images/map/loc_ok.png" width="46" height="46" title="当前位置" /></a></li>
+        </ul>
+    </div>
+    <!-- 退出全屏 -->
+    <div class="BtnExitScreen" style="cursor: pointer;position:absolute ;width: 46px;height:46px;top:50px;right:50px;display:none">
+        
+        <img src="images/mapico1.png" width="46" height="46" title="退出全屏" />
+    </div>
+    <!-- 地图对比 -->
+    <div class="toobarDuiBiList-btn elemHide" style="display:none">
+        <div class="toobar-btn-box">
+            <div class="toobar-btn-close">
+                <a href="javascript:setAttr('.toobarDuiBiList-btn','style','display:none;');"><img src="images/map-user-close.png" width="20" height="20" /></a>
+            </div>
+            <div>
+                <ul>
+                    <li class="toolbarItem btn-1" id="FenPingDuiBi">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_fenping.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">分屏对比</span>
+                    </li>
+                    <li class="toolbarItem btn-2" id="JuanLianDuiBi">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_juanlian.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">卷帘对比</span>
+                    </li>
+                    <li class="toolbarItem btn-3" id="YingXiangBoFang">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_imgplay.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">影像播放</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--专题图-->
+    <div class="toobarZhuanTi-btn elemHide" style="display: none;">
+        <div class="title">
+            <div style="border-bottom: 1px solid #e6e6e6; width: 320px; margin: 5px; padding-left: 5px; padding-right: 5px;">
+                <input type="text" id="txtZhuanTiMC" style="width: 280px; height: 30px; padding: 8px; border: none; font-size: 14px; background-color: #FFF;" placeholder="请选择一个专题图，执行搜索查询！" />
+                <img id="tmapSearch" src="images/map/search2.png" style="height: 20px; width: 20px; cursor: pointer; float: right; margin: 10px 2px 0 0;" />
+            </div>
+            <div id="divZhuanTiListTree" style="max-height:400px">
+                <ul id="tree" class="ztree" style="width: 320px; overflow: auto;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="toobarZhuanTiPic-btn" style="display: none;">
+        <span style="position: absolute; font-size: 14px; margin-left: -40px">专题图图例</span>
+        <img id="closeZhuanTiListPicPannel" src="images/map/iw-close-2.png" />
+        <div style="margin-top: 24px; border-bottom: 1px rgb(181, 181, 181) solid"></div>
+        <div id="divZhuanTiListPic" style="padding: 4px 3px 6px 3px; cursor: pointer">
+            <img data-original="" src="images/map/t_zhuanti_1.png" />
+        </div>
+    </div>
+    <!-- 底图切换toobarDiTu_item -->
+    <div class="toobarDiTu-btn elemHide" style="display:none">
+        <div class="toobar-btn-box">
+            <div class="toobar-btn-close">
+                <a href="javascript:setAttr('.toobarDiTu-btn','style','display:none;');"><img src="images/map-user-close.png" width="20" height="20" /></a>
+            </div>
+            <div>
+                <ul>
+                    <li class="toolbarItem btn-1" id="ShiLiang">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_shiliang.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">矢量</span>
+                    </li>
+                    <li class="toolbarItem btn-2" id="YingXiang">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_yingiangditu.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">影像</span>
+                    </li>
+                    <li class="toolbarItem btn-3" id="YunXuan">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_yunxuanditu.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">晕渲</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 标绘 -->
+    <div class="toobarBiaoHui-btn elemHide" style="display:none">
+        <div class="toobar-btn-box">
+            <div class="toobar-btn-close">
+                <a href="javascript:setAttr('.toobarBiaoHui-btn','style','display:none;');"><img src="images/map-user-close.png" width="20" height="20" /></a>
+            </div>
+            <div>
+                <ul>
+                    <li class="toolbarItem btn-1" id="DiamBiaoHui">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/tool_markpointer.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">点标绘</span>
+                    </li>
+                    <li class="toolbarItem btn-2" id="XianBiaoHui">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/tool_markline.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">线标绘</span>
+                    </li>
+                    <li class="toolbarItem btn-3" id="MianBiaoHui">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/tool_markpolygon.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">面标绘</span>
+                    </li>
+                    <li class="toolbarItem btn-4" id="WenZiBiaoHui">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/tool_marktext.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">文字标绘</span>
+                    </li>
+                    <li class="toolbarItem btn-5" id="FenXiang">
+                        <span class="icon" style="background: rgba(0, 0, 0, 0) url('images/map/t_fenxiiang.png') no-repeat scroll 0 0 / 16px"></span>
+                        <span class="name">分享</span>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 标绘部分 -->
+    <div id="marker_div" style="position: absolute; z-index: 10;display: none " class="elemHide">
+        <div class="Map_bubble_pop">
+            <!-- 编辑  开始-->
+            <div id="marker_editdiv" style="display: none">
+                <div class="Map_bubble_top">
+                    <div class="Map_bubble_title">
+                        <p class="iw_poi_title">标绘</p>
+                    </div>
+                    <div class="Map_bubble_buttons">
+                        <b class="us_remark_but">
+                            <img onclick="btnMarkerDel()" src="images/map/transparent.gif" class="us_delete" />
+                            <img onclick="btnMarkerClose()" src="images/map/transparent.gif" class="us_close" />
+                        </b>
+
+                    </div>
+                </div>
+                <div class="Map_bubble_content">
+                    <!-- 编辑 公用部分-->
+                    <div class="left" style="float: left">
+                        <span>名称</span>
+                        <input name="title" id="marker_point_title" style="font: 12px/18px tahoma, arial, 宋体; padding: 3px; border: 1px solid rgb(181, 181, 181); border-image: none; width: 248px; height: 25px; color: rgb(140, 140, 140); font-size-adjust: none; font-stretch: normal;" type="text" placeholder="我的标记" />
+
+                        <div style="height: 5px; clear: both;"></div>
+                        <span>备注</span>
+                        <textarea name="content" id="marker_point_content" style="resize: none; font: 12px/1.5 tahoma, arial, 宋体; padding: 3px; border: 1px solid rgb(181, 181, 181); border-image: none; width: 248px; height: 64px; color: rgb(140, 140, 140); -ms-overflow-y: auto; font-size-adjust: none; font-stretch: normal;"></textarea>
+                    </div>
+                    <div id='changeImg' title="更换标记样式" style="display: none; float: left; margin-left: 5px; width: 32px; text-align: center; cursor: pointer;">
+                        <img class="sp_s sp_13" id="pointImg" src="images/map/mark2/point0.png" />
+                        <span>当前选中</span>
+                    </div>
+                    <div style="height: 0px; clear: both;"></div>
+                </div>
+                <hr style="margin: 2px" />
+                <!-- 编辑 点样式 -->
+                <div id="pointmark_imgdiv" style="display: none">
+                    <ul id='ulPoint'>
+                        <li>
+                            <img src='images/map/mark2/point0.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point1.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point2.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point3.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point4.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point5.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point6.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point7.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point8.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point9.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point10.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point11.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point12.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point13.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point14.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point15.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point16.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point17.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point18.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point19.png' class='sp_12' />
+                        </li>
+                        <li>
+                            <img src='images/map/mark2/point20.png' class='sp_12' />
+                        </li>
+                    </ul>
+                </div>
+                <!-- 编辑 线-->
+                <div id="marker_edit_line" class="Map_bubble_edit" style="display: none">
+                    <span class="">&nbsp;&nbsp;&nbsp;&nbsp;线颜色:</span>
+                    <span class="jPicker"></span>
+                    <span class="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线宽:</span>
+                    <select class="lineWidth" style="width: 40px">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected=selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    <div style="height: 5px; clear: both;"></div>
+                    <span class="" style="float: left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线型:&nbsp;</span>
+                    <div class="styleLine_select_box">
+                        <span>
+                            <img src="images/map/linestyle/solid.png" val="solid" />
+                        </span>
+                        <ul class="son_ul">
+                            <li>
+                                <img src="images/map/linestyle/solid.png" val="solid" />
+                            </li>
+                            <li>
+                                <img src="images/map/linestyle/dash.png" val="dash" />
+                            </li>
+                            <li>
+                                <img src="images/map/linestyle/dot.png" val="dot" />
+                            </li>
+                            <li>
+                                <img src="images/map/linestyle/dashdot.png" val="dashdot" />
+                            </li>
+                            <li>
+                                <img src="images/map/linestyle/longdashdot.png" val="longdashdot" />
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="height: 5px; clear: both;"></div>
+                </div>
+
+                <!-- 编辑 面-->
+                <div id="marker_edit_area" class="Map_bubble_edit" style="display: none">
+                    <span class="">边框颜色:</span>
+                    <span class="jPicker"></span>
+                    <span class="col">&nbsp;&nbsp;&nbsp;&nbsp;边框宽度:</span>
+                    <select class="lineWidth" style="width: 40px">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected=selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+
+                    <div style="height: 5px; clear: both;"></div>
+                    <span>填充颜色:</span>
+                    <span class="jPicker"></span>
+
+                    <span class="col">填充透明度:</span>
+                    <select id="trad" style="width: 40px">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <!-- 编辑 线-->
+                <div id="marker_edit_text" class="Map_bubble_edit" style="display: none">
+                    <span class="">&nbsp;&nbsp;&nbsp;&nbsp;字颜色:</span>
+                    <span class="jPicker"></span>
+                    <span class="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;字体大小:</span>
+                    <select class="lineWidth" style="width: 40px">
+                        <option value="12">12</option>
+                        <option value="14" selected=selected>14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="22">22</option>
+                        <option value="24">24</option>
+                    </select>
+                </div>
+                <div class="Map_bubble_bottom">
+                    <!-- 保存删除按钮 -->
+                    <div style="cursor: pointer; text-align: center; margin: 5px">
+                        <input class="iw_bt" id="" style="margin-right: 10px;" onclick="btnMarkerSave()" type="button" value="保存" />
+                        <input class="iw_bt" id="" style="" onclick="btnMarkerDel()" type="button" value="删除" />
+                    </div>
+                </div>
+
+                <!-- 编辑  结束-->
+
+            </div>
+
+            <!-- 标绘  显示 -->
+            <div id="marker_showdiv" style="display: none">
+                <div class="Map_bubble_top">
+                    <div class="Map_bubble_title">
+                        <p class="iw_poi_title"></p>
+                    </div>
+                    <div class="Map_bubble_buttons">
+                        <b class="us_remark_but">
+                            <img onclick="btnMarkerEdit()" src="images/map/transparent.gif" class="us_edit" />
+                            <img onclick="btnMarkerDel()" src="images/map/transparent.gif" class="us_delete" />
+                            <img onclick="btnMarkerClose()" src="images/map/transparent.gif" class="us_close" />
+                        </b>
+                    </div>
+                </div>
+                <div class="Map_bubble_content" style=""></div>
+                <div class="Map_bubble_bottom"></div>
+            </div>
+        </div>
+        <!-- 箭头样式 -->
+        <div style="float: left; margin-left: 130px; margin-top: -1px">
+            <img style="z-index: 10; width: 58px; height: 31px;" src="images/map/iw_tail.png" />
+        </div>
+    </div>
+    <!-- 分享 -->
+    <div id="map_share" class="Map_bubble_pop elemHide" style="z-index: 20; position: absolute; width: 280px; display: none; top: 400px; right: 50px">
+        <div class="Map_bubble_top">
+            <div class="Map_bubble_title">
+                您可将当前地图上的内容分享给好友
+            </div>
+            <div class="Map_bubble_buttons">
+                <b class="us_remark_but">
+                    <img onclick="btnCloseShare()" src="images/map/transparent.gif" class="us_close" />
+                </b>
+            </div>
+        </div>
+        <div class="Map_bubble_content" style="">
+            <span id="getLinkF" style="display:none;">复制成功</span>
+            <span id="getLinkBtnSpan" class="" onclick="btnGetLink()"></span>
+            <input type="text" style="height: 24px; width: 215px; margin: 0 0px 0 0px;" id="linkText" value="正在获取..." />
+        </div>
+        <div class="Map_bubble_bottom">
+            <div id="qcode" style="text-align: center; margin: 6px 0"></div>
+        </div>
+    </div>
+
+
+    <!--查询窗口-->
+    <div class="ibox-content searchContainer toobarSearch-btn elemHide" style="display:none">
+        <div class="toobar-btn-close">
+            <a href="javascript:setAttr('.toobarSearch-btn','style','display:none;');"><img src="images/map-user-close.png" width="20" height="20" /></a>
+        </div>
+
+        <!--<img src="img/logo.png" style=" height:40px; left:-15px;position:relative;top:-13px; width:40px;" />-->
+        <input id="txtSearchAddress" type="text" placeholder="搜索地名地址 兴趣点 " class="form-control searchTxt" style="left: 0px; position: relative; top: 8px; width: 320px; border: none; margin: 0 0 0 8px" />
+
+        <div id="separatorAddress" class="separator1"></div>
+
+        <img class="rootIcon" src="images/map/route.png" alt="路线" title="路线" onclick="ssroute.routeFromBtn()" />
+
+        <img id="imgSearchAddress" class="searchIcon" style="left:320px;" src="images/map/search.jpg" onclick="ssinteratedquery.entry()" />
+    </div>
+    <!--分类查询列表-->
+    <div id="searchResultContainer" class="ibox-content searchResultContainer elemHide" style="display: none;">
+        <img id="closeFenLeiPannel" src="images/map/iw-close-2.png" style="position: absolute; top: 8px; right: 12px; height: 13px; width: 13px; cursor: pointer;" />
+        <!--  <div class="separator2" style="margin-top: 20px; margin-bottom: 0px;"></div>-->
+
+        <div class="fenlei_div" id="divFastQuery">
+
+        </div>
+
+        <div id="divHistorySeparator" class="separator2"></div>
+
+        <div id="poi-history-c" class="poi-history-c" style="display: block;">
+            <ul class="poi-history"></ul>
+            <div class="del-all clearfix">
+                <span class="btn" onclick="ssinteratedquery.clearSearchCookies()">删除所有历史记录</span>
+            </div>
+        </div>
+
+        <div class="separator2"></div>
+
+        <div>
+            <h4 style="color: #999; margin: 8px; text-align: center;">天地图·厦门</h4>
+        </div>
+    </div>
+    <!--查询结果列表-->
+    <div id="query" class="searchResultBox elemHide" style="display: none; z-index: 999;">
+        <div class="searchResultBoxtop">
+            <div class="divQueryFilter" onclick="ssinteratedquery.loadDistrict()">所有区域</div>
+            <div class="divQueryFilter2" onclick="ssinteratedquery.loadCatagorydquery()">所有类别</div>
+            <img onclick="ssinteratedquery.close()" src="images/map/iw_close.gif" style="float: right; margin: 8px; height: 12px; width: 12px; cursor: pointer;" />
+        </div>
+
+        <!--数据列表-->
+        <div id="searchResultItemsAddress" class="searchResultItems" style="max-height: 500px; overflow-x: hidden;"></div>
+
+        <!-- 政区列表 -->
+        <div id="divDistrictList" class="divDistrictList" style="max-height: 500px; overflow-x: hidden; position: relative; font-size: 13px; display: none;">
+            <div class="line" style="height: 30px; margin-bottom: 5px;">
+                <span style="margin-left: 10px; font-weight: bold;" onclick="ssinteratedquery.loadPoiTypes()">思明区</span>
+            </div>
+            <div>
+                <div class="lineSubItem">
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                </div>
+                <div class="lineSubItem">
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                </div>
+                <div class="lineSubItem">
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                    <div style="width: 110px; float: left;"><span>滨海街道办</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!--分类列表-->
+        <div id="divCatagoryList" class="divCatagoryList" style="max-height: 500px; overflow-x: hidden; position: relative; font-size: 13px; display: none;">
+            <div class="line" style="height: 30px; margin-bottom: 5px;">
+                <span style="margin-left: 10px; font-weight: bold;">机关团体及其事业单位</span>
+            </div>
+            <div>
+                <div class="lineSubItem">
+                    <div style="width: 110px; float: left;"><span>机关事业单位</span></div>
+                </div>
+                <div class="lineSubItem">
+                    <div style="width: 200px; float: left;"><span>群众社团</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!--分页组件-->
+        <div id="searchResultBoxbottom" class="searchResultBoxbottom ">
+            <div id="divPager" class="divPager" style="padding-left: 30px; padding-top: 7px;">
+                <div class="divPager homePage">首页</div>
+                <div class="divPager prePage">上一页</div>
+                <div class="divPager num">1</div>
+                <div class="divPager num">2</div>
+                <div class="divPager num">3</div>
+                <div class="divPager num">4</div>
+                <div class="divPager num">5</div>
+                <div class="divPager nextPage">下一页</div>
+                <div class="divPager lastPage">末页</div>
+            </div>
+        </div>
+    </div>
+    <div id="divNoData" class="searchResultBox" style="font-size: 12px; color: #4c4c4c; display: none; z-index: 999;">
+        <div class="searchResultBoxtop">
+            <div style="cursor: pointer; padding: 6px;" onclick="ssinteratedquery.noDataReturn()">&lt; 返回</div>
+        </div>
+
+        <div style="height: 150px; overflow-x: hidden; position: relative;">
+            <img src="images/nodata.jpg" style="margin-top: 10px; margin-left: 10px;" />
+            <div style="margin:2px 6px; position: absolute; left: 120px; top: 10px;">
+                抱歉，在厦门市没有找到与<span id="txtInputText" style="color: blue;">"福建省地址测绘院"</span>相关的地点
+
+                <div style="margin-top: 10px;">您还可以：</div>
+                <ul style="margin-left: 20px;">
+                    <li style="list-style: disc outside;">检查输入的文字是否有误</li>
+                    <li style="list-style: disc outside;">尝试更换不同的文字</li>
+                    <li style="list-style: disc outside;">在专题图中检索这个地址</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--路径分析-->
+    <div id="divRoute" class="divRoute" style="display: none;">
+        <div id="divRouteStyle" style="float: right; width: 360px; height: 30px; background-color: #3385FF; line-height: 12px">
+            <div class="btnroutecar" tag="0" onclick="ssroute.changeRouteStyle(0,this)" style="width:52px;height:21px; background-image: url(images/map/route/car.png)">驾车</div>
+            <div class="btnroutebus" tag="1" onclick="ssroute.changeRouteStyle(1,this)" style="width:52px;height:21px;">公交</div>
+            <div class="btnrouterun" tag="2" onclick="ssroute.changeRouteStyle(2,this)" style="width:52px;height:21px;">步行</div>
+        </div>
+
+        <!--起始点选择-->
+        <div>
+            <div>
+                <a class="route_updown" onclick="ssroute.exchangePnt()"></a>
+            </div>
+            <div class="route_start_end_pnt">
+                <div class="route_start_png">
+                    <span>起：</span>
+                    <input type="text" id="txtRouteBegin" />
+                </div>
+                <div class="route_end_png">
+                    <span>终：</span>
+                    <input type="text" id="txtRouteEnd" />
+                </div>
+            </div>
+        </div>
+
+        <!--操作按钮-->
+        <div class="route_btn">
+            <span onclick="ssroute.clearRoute()">清除路线</span>
+            <div onclick="ssroute.queryRoute()">查询路线</div>
+        </div>
+
+        <!--查询结果-->
+        <div id="route_CarPlanContainer" class="route_PlanContainer" style="display: none;">
+            <div id="route_car_style" class="route_car_style">
+                <div class="route_car_style_time" tag="0" onclick="ssroute.changeCarStyle(0,this)">最短时间</div>
+                <div class="route_car_style_distance" tag="1" onclick="ssroute.changeCarStyle(1,this)">最短距离</div>
+                <div class="route_car_style_highspeed" tag="2" onclick="ssroute.changeCarStyle(2,this)">避开高速</div>
+            </div>
+
+            <div id="route_walk_line" class="route_car_style" style="height: 10px;">
+            </div>
+            <!-- 步行 -->
+            <div id="route_Plan" class="route_Plan" style="height: 450px; overflow-x: hidden; width: 360px;">
+                <div class="route_item">
+                    <div class="route_dir_ico"></div>
+                    <span class="route_item_road">湖滨北路</span>
+                    <span class="route_item_direction">沿莲岳路向西北行驶295米到达途经地</span>
+                </div>
+                <div class="route_item">
+                    <div class="route_dir_ico"></div>
+                    <span class="route_item_road">湖滨北路</span>
+                    <span class="route_item_direction">沿阜成门外大街/阜外大街走1.8公里并从西二环/</span>
+                    <span class="route_item_direction" style="left: 8px;">复兴门桥出口驶离并进入阜成门桥</span>
+                    <span class="route_item_direction" style="left: 8px;">复兴门桥出口驶离并进入阜成门桥</span>
+                </div>
+                <div class="route_item">
+                    <div class="route_dir_ico"></div>
+                    <span class="route_item_road">湖滨北路</span>
+                    <span class="route_item_direction">沿莲岳路向西北行驶295米到达途经地</span>
+                </div>
+                <div class="route_dir_line"></div>
+            </div>
+            <div style="width: 360px; text-align: center; color: #999; height: 30px; font-size: 12px; padding-top: 5px; border-top: solid 1px #f0f0f0;">数据来源：国家天地图</div>
+        </div>
+
+
+        <div id="route_BusPlanContainer" class="route_PlanContainer" style="display: none;">
+            <div class="route_bus_style">
+                <div class="route_bus_style_item" style="margin-left: 40px; color: #3385FF; background-color: #ffffff;" tag="0" onclick="ssroute.changeBusStyle(1,this)">较快捷</div>
+                <div class="route_bus_style_item" tag="1" onclick="ssroute.changeBusStyle(2,this)">少换乘</div>
+                <div class="route_bus_style_item" tag="2" onclick="ssroute.changeBusStyle(4,this)">少步行</div>
+                <div class="route_bus_style_item" tag="2" onclick="ssroute.changeBusStyle(8,this)">不坐地铁</div>
+            </div>
+
+            <div id="route_bus_container" class="route_Plan" style="height: 450px; overflow-x: hidden; width: 360px;">
+                <div id="route_bus_item" class="route_bus_item">
+                    <div class="route_bus_title" style="">乘坐95路 转 38路</div>
+                    <div class="route_bus_detail" style="">
+                        <div class="route_bus_item_begin">
+                            <div class="route_dir_bus_begin_ico"></div>
+                            <span class="route_bus_item_begin_title">翔安隧道</span>
+                            <span class="route_bus_item_begin_dir">步行 424米 至 招呼站(约7分钟)</span>
+                        </div>
+
+                        <div class="route_bus_item_node">
+                            <div class="route_dir_bus_node_ico"></div>
+                            <span class="route_bus_item_node_busnum">
+                                <span style="font-weight: bold; color: #3385FF">103路</span>
+                                <span style="color: #878a8c;">（梧村车站方向）</span>
+                            </span>
+                            <div class="route_bus_item_node_line"></div>
+                            <span class="route_bus_item_node_up">
+                                <span>招呼站</span>
+                                <span style="color: #878a8c;">上车</span>
+                            </span>
+                            <span class="route_bus_item_node_down">
+                                <span>仙岳花园</span>
+                                <span style="color: #878a8c;">下车</span>
+                            </span>
+                        </div>
+
+                        <div class="route_bus_item_split">
+                            <div class="route_dir_bus_split_ico"></div>
+                            <span>仙岳花园</span>
+                            <span style="color: #878a8c;">同站换乘</span>
+
+                        </div>
+
+                        <div class="route_bus_item_node">
+                            <div class="route_dir_bus_node_ico"></div>
+                            <span class="route_bus_item_node_busnum">
+                                <span style="font-weight: bold; color: #3385FF">103路</span>
+                                <span style="color: #878a8c;">（梧村车站方向）</span>
+                            </span>
+                            <div class="route_bus_item_node_line"></div>
+                            <span class="route_bus_item_node_up">
+                                <span>招呼站</span>
+                                <span style="color: #878a8c;">上车</span>
+                            </span>
+                            <span class="route_bus_item_node_down">
+                                <span>仙岳花园</span>
+                                <span style="color: #878a8c;">下车</span>
+                            </span>
+                        </div>
+
+
+                        <div class="route_bus_item_end">
+                            <div class="route_dir_bus_end_ico"></div>
+                            <span class="route_bus_item_end_dir">步行 367米 至 终点(约6分钟)</span>
+                            <span class="route_bus_item_end_title">南靖土楼枸杞叶小吃</span>
+                        </div>
+
+                        <div class="route_dir_bus_line"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 360px; text-align: center; color: #999; height: 30px; font-size: 12px; padding-top: 5px; border-top: solid 1px #f0f0f0;">数据来源：国家天地图</div>
+        </div>
+
+        <!--路线搜索记录-->
+        <div id="route_history" style="display: none;">
+            <div class="route_his_op" style="">
+                <h2>路线搜索记录</h2>
+                <a>删除记录</a>
+            </div>
+            <div class="route_his_list">
+                <ul>
+                    <li title="我的位置  →  厦门闽矿测绘院同安测绘处">
+                        <span class="route_his_item_logo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span>我的位置  →  厦门闽矿测绘院同安测绘处</span>
+                        <span class="route_his_item_del">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </li>
+                    <li title="我的位置  →  厦门闽矿测绘院同安测绘处">
+                        <span class="route_his_item_logo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span>我的位置  →  厦门闽矿测绘院同安测绘处</span>
+                        <span class="route_his_item_del">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </li>
+                    <li title="我的位置  →  厦门闽矿测绘院同安测绘处">
+                        <span class="route_his_item_logo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span>我的位置  →  厦门闽矿测绘院同安测绘处</span>
+                        <span class="route_his_item_del">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!--模糊搜索列表-->
+        <div id="routePntDataListContainer" class="route_PlanContainer" style="display: none;">
+            <div class="route_car_style" style="height: 10px; border-top: 1px solid #e6e6e6; border-bottom: none;">
+            </div>
+            <div id="routePntDataList" class="searchResultItems" style="max-height: 500px; width: 100%; overflow-x: hidden;">
+            </div>
+        </div>
+
+        <div id="routePntItemPager" class="searchResultBoxbottom" style="display: none;">
+            <div id="divRoutePager" class="divPager" style="padding-left: 30px; padding-top: 7px;">
+                <div class="divPager homePage">首页</div>
+                <div class="divPager prePage">上一页</div>
+                <div class="divPager num">1</div>
+                <div class="divPager num">2</div>
+                <div class="divPager num">3</div>
+                <div class="divPager num">4</div>
+                <div class="divPager num">5</div>
+                <div class="divPager nextPage">下一页</div>
+                <div class="divPager lastPage">末页</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--左下角 logo 数据说明-->
+    <div class="xmlogo"></div>
+
+    <div class="mapAttr" style="font-size: 12px">
+        <span style="margin-left: 10px; color: #565656;" id="divDataSource">数据来源：天地图·厦门</span>
+        <span style="margin-left: 10px; color: #565656;" id="divDataProvide">提供单位：厦门市国土资源与房产管理局</span>
+        <span style="margin-left: 10px; color: #565656;" id="divRegMapCode">审图号：闽S[2016]33号</span>
+        <a target="_blank" href="http://www.cnzz.com/stat/website.php?web_id=1256970897"><img vspace="0" hspace="0" border="0" src="http://icon.cnzz.com/img/pic.gif" /></a>
+
+        <span id="span_cnzz" style="display:none">
+            <script type="text/javascript">
+                var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+                document.write(unescape("%3Cspan id='cnzz_stat_icon_1256970897'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256970897%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+        </span>
+    </div>
 </body>
 </html>
 <style>

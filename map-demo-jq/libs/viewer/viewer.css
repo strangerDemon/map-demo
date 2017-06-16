@@ -232,45 +232,13 @@
 }
 
 .viewer-toolbar {
- /* width: 330px;*/
- /* padding: 3px 0;*/
- /* margin: 0 auto 5px;*/
-  overflow: hidden;
-}
-/*自定义 viewer-toolbar */
-.viewer-toolbar-630{
- /* overflow: hidden;
-  position: relative;
-  top: -415px;
-  margin-left: 520px;*/
   overflow: hidden;
   position: absolute;
-  top: 15px;
-  margin-left: 520px;
-}
-.viewer-toolbar-300{
-  /*overflow: hidden;
-  position: relative;
-  margin-left: 180px;
-  top: -200px;*/
-  overflow: hidden;
-  position: absolute;
-  margin-left: 180px;
-  margin-top: -200px;
-}
-.viewer-toolbar-200{
-  /*overflow: hidden;
-  position: relative;
-  margin-left: 90px;
-  top: -120px;*/
-  overflow: hidden;
-  position: absolute;
-  margin-left: 95px;
-  margin-top: -125px;
 }
 
+
 .viewer-toolbar > li {
-  float: left;
+  float: right;
   width: 24px;
   height: 24px;
   overflow: hidden;
@@ -299,94 +267,11 @@
  /* margin: 5px;*/
 }
 /*自定义*/
-.viewer-toolbar-630 > li {
-  float: left;
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .5);
-  border-radius: 50%;
-}
-.viewer-toolbar-630 > li:hover {
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .8);
-}
-.viewer-toolbar-630 > li:before {
-  margin: 2px;
-}
-.viewer-toolbar-630 > li + li {
-  margin-left: 1px;
-}
-.viewer-toolbar-630 > .viewer-play {
-  /*width: 30px;
-  height: 30px;
-  margin-top: -3px;
-  margin-bottom: -3px;*/
-}
-.viewer-toolbar-630 > .viewer-play:before {
-  /* margin: 5px;*/
-}
 
-.viewer-toolbar-300 > li {
-  float: left;
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .5);
-  border-radius: 50%;
-}
-.viewer-toolbar-300 > li:hover {
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .8);
-}
-.viewer-toolbar-300 > li:before {
-  margin: 2px;
-}
-.viewer-toolbar-300 > li + li {
-  margin-left: 1px;
-}
-.viewer-toolbar-300 > .viewer-play {
-  /*width: 30px;
-  height: 30px;
-  margin-top: -3px;
-  margin-bottom: -3px;*/
-}
-.viewer-toolbar-300 > .viewer-play:before {
-  /* margin: 5px;*/
-}
-
-.viewer-toolbar-200 > li {
-  float: left;
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .5);
-  border-radius: 50%;
-}
-.viewer-toolbar-200 > li:hover {
-  background-color: #000;
-  background-color: rgba(0, 0, 0, .8);
-}
-.viewer-toolbar-200 > li:before {
-  margin: 2px;
-}
-.viewer-toolbar-200 > li + li {
-  margin-left: 1px;
-}
-.viewer-toolbar-200 > .viewer-play {
-  /*width: 30px;
-  height: 30px;
-  margin-top: -3px;
-  margin-bottom: -3px;*/
-}
-.viewer-toolbar-200 > .viewer-play:before {
-  /* margin: 5px;*/
+ul > span{
+  float:left;
+  color:#fff;
+  margin-left: 10px;
 }
 
 .viewer-tooltip {
