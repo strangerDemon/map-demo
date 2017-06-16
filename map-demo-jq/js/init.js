@@ -45,7 +45,8 @@ var gpsxy = [];
 var xys = [];
 var dataIndex = 0;
 window.socket;
-window.token = "**自定义api token";
+window.token = "dGltZT0xNDc5Mzg1NjgyMzY0Jm51bT1TUTZJMyZhY2Nlc3NUb2tlbj10cFJBQ0dqOTdPSk1nZG5MUlllTVQzSVRoL090RDB6SSZ2ZXJzaW" +
+    "9uPXYxLjAmYXBwSWQ9aW5pdCZwbGF0Zm9ybT1hbmRyb2lkJnBob25lVVVJRD01YjJkMjk1MzNkNmY0MzM2OGExNzJhNmRhMjk3ZGE1ZA==";
 $(function () {
     var namespace = ["esri/map",
         "esri/layers/ArcGISTiledMapServiceLayer",
@@ -77,6 +78,53 @@ $(function () {
               dojo.connect(navToolbar, "onExtentHistoryChange", extentHistoryChangeHandler);
               function extentHistoryChangeHandler() {
               }
+              //菜单条点击
+              $(".map_btn").on("click", "ul li", function () {
+                  var className = this.className.split("-")[2] * 1;//$(this).context.className.split("-")[2] * 1
+                  switch (className) {
+                      case 1:
+                          ssutil.FullScreen();//全屏
+                          break;
+                      case 2:
+                          ssutil.ShowDuiBiListDiv();//对比
+                          break;
+                      case 3:
+                          navToolbar.deactivate();//清除放大和缩小按钮
+                          ssutil.AllDel();//清楚标绘和测距数据
+                          break;
+                      case 4:
+                          ssutil.ShowZhuanTiDiv();//专题图
+                          break;
+                      case 5:
+                          ssutil.ShowSearchDiv();//搜索
+                          break;
+                      case 6:
+                          ssutil.Measure(1);//量测
+                          break;
+                      case 7:
+                          ssutil.Measure(2);//量测
+                          break;
+                      case 8:
+                          ssutil.ShowDiTuDiv();//地图切换
+                          break;
+                      case 9:
+                          ssutil.ShowBiaohuiDiv();//标绘
+                          break;
+                      case 10:
+                          navToolbar.activate(Navigation.ZOOM_IN);//放大
+                          break;
+                      case 11:
+                          navToolbar.activate(Navigation.ZOOM_OUT);//缩小
+                          break;
+                      case 12:
+                          //定位用户当前的位置
+                          ssmyPosition.init();
+                          ssmyPosition.showGeolocation();
+                          break;
+                      default:
+                          break;
+                  }
+              });
 
               routeGraphicsLayer = new esri.layers.GraphicsLayer();
               routeGraphicsLayer.id = "ssroute_layer";
@@ -183,7 +231,10 @@ $(function () {
 
     //视频监测
     $("#btn_spjc").click(function(){
+        switchFunModel();
         drawCamerePoint();
+        lastFunModel = "camera";
+        //$(".camera").show();
     });
 
     //异常监测

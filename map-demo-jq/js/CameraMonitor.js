@@ -13,6 +13,7 @@ function ajaxCamereList() {
         dataType: 'json'
     });
 }
+var isShow=false;
 //绘制摄像头点的位置
 function drawCamerePoint(){
     ajaxCamereList().then(function (data) {
@@ -23,14 +24,9 @@ function drawCamerePoint(){
         }
         for (let i = 0; i < cameraList.length; i++) {
             var CameraPoint = new esri.geometry.Point(parseFloat(cameraList[i].Lng), parseFloat(cameraList[i].Lat), new esri.SpatialReference({wkid: 4490}));
-            var CameraAGraphic = new esri.Graphic(CameraPoint, new esri.symbol.PictureMarkerSymbol('../images/video.png', 16, 16));//面，以点汇面
+            var CameraAGraphic = new esri.Graphic(CameraPoint, new esri.symbol.PictureMarkerSymbol('images/video.png', 16, 16));//面，以点汇面
             var CameraLayer= new esri.layers.GraphicsLayer({id: "cameraMap"+cameraList[i].Id});//layer，在图层中添加面
-
-            /*ssmap.map._layers.forEach(function(layer){
-             if(layer.Id.contains("cameraMap")){
-             ssmap.map.remove(layer);
-             }
-             });*/
+            //无论何时点击，都更新ssmap.map中的cameralayer图层
             ssmap.map.addLayer(CameraLayer);
             CameraLayer.add(CameraAGraphic);
             //只能在layer和map上加事件
@@ -39,15 +35,22 @@ function drawCamerePoint(){
                 window.caremaMonitor.init(cameraList[i]);
             });
             CameraLayer.on("mouse-over",function(){//内部不能用CameraLayer，会混乱，用this
-                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('../images/video.png', 32, 32);
+                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('images/video.png', 32, 32);
                 this.refresh();
             });
             CameraLayer.on("mouse-out",function(){
-                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('../images/video.png', 16,16);
+                this.graphics[0].symbol= new esri.symbol.PictureMarkerSymbol('images/video.png', 16,16);
                 this.refresh();
             });
-            CameraLayer.show();
+
+            //ssmap.map 根据当前的状态设置显隐
+            if (isShow) {
+                ssmap.map.getLayer("cameraMap" + cameraList[i].Id).hide();
+            } else {
+                ssmap.map.getLayer("cameraMap" + cameraList[i].Id).show();
+            }
         }
+        isShow=!isShow;
     });
 }
 //做成一个全局变量，而不是CameraLayer.on("click",function(){内的临时变量
