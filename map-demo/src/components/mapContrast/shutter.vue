@@ -4,7 +4,7 @@
     <div class="shutterCheckDiv">
       <div class="checked">
         <span>卷帘模式:</span>
-        <el-checkbox-group v-model="checkTypes" change="changeType">
+        <el-checkbox-group v-model="checkTypes">
           <el-checkbox v-for="type in types" :checked="type.checked" :label="type" :key="type">{{type.label}}
           </el-checkbox>
         </el-checkbox-group>
@@ -66,6 +66,10 @@
         flagPan: true,
         ishorizontalswipe: true,
         isverticalswipe: false,
+
+        /*lineSymbol: new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASH, new dojo.Color([255, 0, 0]), 2),
+        horizontalLine:null,
+        verticalLine:null,*/
       }
     },
     //默认
@@ -194,9 +198,14 @@
         let vm = this;
         let length = vm.overLayers.length;
         for (let i = 0; i < length; i++) {
-          document.getElementById("shutterMap_"+vm.overLayers[0].id).remove();
-          vm.map.removeLayer(vm.overLayers[0]);
-          vm.overLayers.splice(0, 1);
+          let dom = document.getElementById("shutterMap_" + vm.overLayers[0].id);
+          //判断后 console 不报错，但是不能正常运行。。
+          if (dom!=null&&dom!=undefined) {
+            dom.remove();
+            vm.map.removeLayer(vm.overLayers[0]);
+            vm.overLayers.splice(0, 1);
+          }
+
         }
       },
       //移除所有对比层
@@ -204,10 +213,12 @@
         let vm = this;
         let length=vm.comparedLayers.length;
         for (let i = 0; i < length; i++) {
-          document.getElementById("shutterMap_"+vm.comparedLayers[0].id).remove();
-          vm.map.removeLayer(vm.comparedLayers[0]);
-          vm.comparedLayers.splice(0, 1);
-          //
+          let dom = document.getElementById("shutterMap_"+vm.comparedLayers[0].id);
+          if (dom!=null&&dom!=undefined) {
+            dom.remove();
+            vm.map.removeLayer(vm.comparedLayers[0]);
+            vm.comparedLayers.splice(0, 1);
+          }
         }
       },
       InitSwipe () {
@@ -269,6 +280,7 @@
         clipright = vm.isverticalswipe ? (offsetX - origin.x) + "px" : (mapwidth - origin.x) + "px";
 
         mapdiv.style.clip = 'rect(' + cliptop + ',' + clipright + ',' + clipbottom + ',' + clipleft + ')';
+
       },
 
       getLayerTransform(layer) {
@@ -302,7 +314,8 @@
 </script>
 <style>
   .shutter {
-    height: 700px;
+  /*  height: 700px;*/
+    height:95%;
   }
 
   .checked {
@@ -311,18 +324,25 @@
   }
 
   .shutterMapDiv {
-    float: right;
+    position: absolute;
+    right: 0;
     margin-right: 15px;
-    width: 79%;
-    height: 95%;
+   /* width: 82%;*/
+    height: 90%;
     border: 1px solid #0092CF;
+    left: 330px;
+    bottom: 1%;
   }
 
   .shutterCheckDiv {
-    float: left;
-    width: 20%;
+    position: absolute;
+    width: 310px;
     border: 1px solid #0092CF;
-    height: 95%;
+    height: 90%;
+    z-index:2;
+    bottom: 1%;
+    overflow-y:scroll;
+    overflow-x:hidden;
   }
 
   .fullWidth .el-checkbox {
